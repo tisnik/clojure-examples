@@ -1,4 +1,4 @@
 # webapp13
 
-Web application that use Clojure Ring and Hiccup libraries.
+Web application that uses Clojure Ring and Hiccup libraries.
 
