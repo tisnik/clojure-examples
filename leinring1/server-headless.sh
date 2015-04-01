@@ -1,0 +1,2 @@
+lein ring server-headless
+
