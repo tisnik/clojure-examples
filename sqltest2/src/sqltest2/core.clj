@@ -14,7 +14,7 @@
 (defn read-whole-table
     "Nacteni obsahu vybrane tabulky."
     [db-spec table-name]
-    (jdbc/query db-spec (str "select * from " table-name " order by id")))
+    (jdbc/query db-spec [(str "select * from " table-name " where postava=? order by id") "tovarnik"]))
 
 (defn list-table
     "Vypis obsahu vybrane tabulky."
