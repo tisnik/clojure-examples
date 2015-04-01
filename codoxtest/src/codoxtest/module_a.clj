@@ -1,5 +1,5 @@
 (ns codoxtest.module-a
-    "Popis modulu 'module-a'")
+    "Popis modulu se jmenem 'module-a'")
 
 (defn f1
     "Popis funkce f1."
