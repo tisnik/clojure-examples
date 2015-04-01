@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="factorial.core-test" errors="0" failures="6" tests="4" time="0.0669" timestamp="2015-04-01_19:29:27+0200">
+    <testcase name="negative-exception-test" classname="factorial.core-test" time="0.0106">
+    <failure>expected: (thrown? IllegalArgumentException (factorial 1))
+  actual: nil
+      at: AFn.java:18</failure>
+    <failure>expected: (thrown? IllegalArgumentException (factorial 2))
+  actual: nil
+      at: AFn.java:18</failure>
+    <failure>expected: (thrown? IllegalArgumentException (factorial 3))
+  actual: nil
+      at: AFn.java:18</failure>
+    </testcase>
+    <testcase name="negative-factorial-test" classname="factorial.core-test" time="0.0064">
+    <failure message="negative test case #1">negative test case #1
+expected: (= (factorial 0) 0)
+  actual: (not (= 1 0))
+      at: AFn.java:18</failure>
+    <failure message="negative test case #2">negative test case #2
+expected: (= (factorial 1) 0)
+  actual: (not (= 1 0))
+      at: AFn.java:18</failure>
+    <failure message="negative test case #3">negative test case #3
+expected: (= (factorial 2) 0)
+  actual: (not (= 2 0))
+      at: AFn.java:18</failure>
+    </testcase>
+    <testcase name="factorial-test" classname="factorial.core-test" time="0.0025">
+    </testcase>
+    <testcase name="exception-test" classname="factorial.core-test" time="0.0013">
+    </testcase>
+</testsuite>
