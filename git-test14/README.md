@@ -1,4 +1,4 @@
-# git-test12
+# git-test14
 
 FIXME: description
 
@@ -10,7 +10,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar git-test12-0.1.0-standalone.jar [args]
+    $ java -jar git-test14-0.1.0-standalone.jar [args]
 
 ## Options
 
