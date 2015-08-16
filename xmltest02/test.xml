@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<first value="42">
+  <second>
+    <third firstTag="10" secondTag="20">
+      <fourth>Hello!
+      </fourth>
+    </third>
+  </second>
+</first>
+
