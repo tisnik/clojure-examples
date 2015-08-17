@@ -1,7 +1,6 @@
 (ns xmltest06.core)
 
 (use '[clojure.xml])
-(use '[clojure.xml])
 (use '[clojure.pprint])
 (use '[clojure.zip])
 
