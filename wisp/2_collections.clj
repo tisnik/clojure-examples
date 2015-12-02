@@ -16,6 +16,9 @@
 
 ; Seznamy
 
+; prázdný seznam
+'()
+
 ; seznam čísel
 '(1 2 3 4)
 
@@ -27,6 +30,9 @@
 
 
 ; Vektory
+
+; prázdný vektor
+[]
 
 ; vektor čísel
 [1 2 3 4]
@@ -42,6 +48,11 @@
 
 
 ; Mapa
+
+; prázdná mapa
+{}
+
+; mapování typu string-string
 {"prvni" "first" "druhy" "second" "treti" "third"}
 
 ; mapa s vyhodnocením proměnných

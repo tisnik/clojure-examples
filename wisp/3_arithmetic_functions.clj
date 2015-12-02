@@ -42,6 +42,9 @@
 ; zkusíme výpočet složitějšího zlomku
 (/ (+ 1 2) (+ 3 4))
 
+; dělení modulo
+(mod 10 3)
+
 ; neracionální (reálná) čísla se vypisují tak, jak to
 ; známe z ostatních programovacích jazyků (samozřejmě
 ; v případě speciálních požadavků programátora lze použít
@@ -53,4 +56,5 @@
 (* (+ variableA variableB) (+ variableC variableD))
 (+ (* variableA variableB) (* variableC variableD))
 (/ (+ variableA variableB) (+ variableC variableD))
+(mod sum items)
 

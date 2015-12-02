@@ -24,11 +24,18 @@
 ; porovnání čtyř hodnot na ekvivalenci
 (== 1 2 3 4)
 
+; pozor! identical? je forma akceptující jen dva parametry!
+;(identical? 1 2 3 4)
+
 ; operace and a or
 (and true false)
 (or true false)
 (and a b c d)
 (or a b c d)
+
+; někdy je "if" zbytečné použít
+(or podminka "nesplneno")
+(and podminka "splneno")
 
 ; různé kombinace
 (and (== a b) (== c d))
