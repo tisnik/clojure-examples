@@ -48,3 +48,9 @@
 ; různé formátovací funkce na úpravu výstupu)
 (* 0.3 (/ (+ 1 2) (+ 3 4)))
 
+; namísto numerických hodnot lze použít i proměnné
+(+ variableA variableB variableC variableD)
+(* (+ variableA variableB) (+ variableC variableD))
+(+ (* variableA variableB) (* variableC variableD))
+(/ (+ variableA variableB) (+ variableC variableD))
+
