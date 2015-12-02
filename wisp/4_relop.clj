@@ -30,7 +30,6 @@
 ; porovnání dvou výrazů na ekvivalenci
 (== 1 2)
 (== 1 1)
-(== 1 1)
 
 ; pozor na rozdíl mezi = a ==
 (= 1 2)
@@ -39,4 +38,13 @@
 ; podvýrazy se nejprve vyhodnotí a posléze se porovnají
 ; vyhodnocené výsledky (v tomto případě dva atomy)
 (== (+ 1 1) (/ 4 2))
+
+; namísto numerických hodnot lze použít i proměnné
+(< variableA variableB)
+(> variableA variableB)
+(<= variableA variableB)
+(>= variableA variableB)
+(== variableA variableB)
+(== variableA variableA)
+(== (+ variableA variableA) (/ variableC variableD))
 
