@@ -12,7 +12,7 @@
 #
 
 all:	1_data_types.js 2_collections.js 3_arithmetic_functions.js 4_relop.js \
-	5_boolean_op.js 6_conditions.js
+	5_boolean_op.js 6_conditions.js  7_functions.js
 
 clean:
 	rm *.js
