@@ -13,19 +13,41 @@
 
 ; Test překladu deklarace různých typů kolekcí do JavaScriptu
 
+
 ; Seznamy
+
+; seznam čísel
 '(1 2 3 4)
+
+; seznam řetězců
 '("prvni" "druhy" "treti")
+
+; seznam "keywords"
 '(:prvni :druhy :treti)
 
+
 ; Vektory
+
+; vektor čísel
 [1 2 3 4]
+
+; vektor řetězců
 ["prvni" "druhy" "treti"]
+
+; vektor "keywords"
 [:prvni :druhy :treti]
+
+; vektor proměnných
+[positionX positionY positionZ]
+
 
 ; Mapa
 {"prvni" "first" "druhy" "second" "treti" "third"}
 
-; Mnozina
+; mapa s vyhodnocením proměnných
+{"X" positionX "y" positionY "z" positionZ}
+
+
+; Množina
 #{"prvni" "druhy" "treti"}
 
