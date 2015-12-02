@@ -35,6 +35,11 @@
 (= 1 2)
 (= 1 1)
 
+; navíc lze použít i speciální formu identical?
+; ta se přeloží na operátor ===
+(identical? 1 2)
+(identical? [1 2] [3 4])
+
 ; podvýrazy se nejprve vyhodnotí a posléze se porovnají
 ; vyhodnocené výsledky (v tomto případě dva atomy)
 (== (+ 1 1) (/ 4 2))
@@ -47,4 +52,5 @@
 (== variableA variableB)
 (== variableA variableA)
 (== (+ variableA variableA) (/ variableC variableD))
+(identical? variableA variableB)
 
