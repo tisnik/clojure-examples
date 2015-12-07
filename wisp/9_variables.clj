@@ -22,6 +22,13 @@
 
 (def z [1 2 3 4])
 
+; lokální proměnné v rámci modulu
+(def ^:private xx 42)
+
+(def ^:private yy (+ x 1))
+
+(def ^:private zz [1 2 3 4])
+
 ; mutátor
 (set! x (- x 1))
 
