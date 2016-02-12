@@ -1,4 +1,4 @@
-# ircbot2
+# ircbot3
 
 FIXME: description
 
@@ -10,7 +10,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar ircbot2-0.1.0-standalone.jar [args]
+    $ java -jar ircbot3-0.1.0-standalone.jar [args]
 
 ## Options
 
