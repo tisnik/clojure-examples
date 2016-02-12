@@ -1,6 +1,6 @@
 # ircbot2
 
-FIXME: description
+Very simple IRC bot programmed in the Clojure programming language.
 
 ## Installation
 
@@ -8,13 +8,13 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
-FIXME: explanation
+lein run
 
     $ java -jar ircbot2-0.1.0-standalone.jar [args]
 
 ## Options
 
-FIXME: listing of options this app accepts.
+At the moment, there are no options supported.
 
 ## Examples
 
@@ -30,7 +30,7 @@ FIXME: listing of options this app accepts.
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2016 Pavel Tisnovsky
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
