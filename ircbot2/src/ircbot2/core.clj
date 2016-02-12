@@ -37,7 +37,7 @@
     [incoming-message]
     ; rozhodnuti, zda se ma odpoved poslat zpet do kanalu nebo na soukromy chat
     (if (message-to-channel? incoming-message) ; pokud je cilem primo jmeno kanalu
-        incoming-message                             ; -> posleme odpoved zpet na kanal
+        incoming-message                       ; -> posleme odpoved zpet na kanal
         ; v opacnem pripade posleme zpravu primo uzivateli
         ; cilem bude prezdivka uzivatele
         (assoc incoming-message :target (:nick incoming-message))))
