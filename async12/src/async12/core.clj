@@ -16,7 +16,7 @@
     [& args]
     (println "Start")
 
-    ; vytvorime dva kanaly
+    ; vytvorime tri kanaly
     (let [channel1 (chan) ; bezny kanal
           channel2 (chan) ; bezny kanal
           channel3 (chan) ; bezny kanal
