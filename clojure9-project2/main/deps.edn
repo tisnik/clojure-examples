@@ -1,0 +1,3 @@
+{:deps
+     {time-utils {:local/root "../time_utils/"}
+      matrix     {:local/root "../matrix/"}}}
