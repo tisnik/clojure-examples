@@ -1,0 +1,34 @@
+valid?
+--------------------------------------------------
+false
+false
+true
+false
+true
+false
+
+explain
+--------------------------------------------------
+val: {:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/id)
+val: {:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/name)
+val: {:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/surname)
+nil
+
+val: #:spec-demo1.core{:name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/id)
+nil
+
+Success!
+nil
+
+val: #:user{:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/id)
+val: #:user{:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/name)
+val: #:user{:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/surname)
+nil
+
+Success!
+nil
+
+val: #:other.namespace{:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/id)
+val: #:other.namespace{:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/name)
+val: #:other.namespace{:id 1, :name "Name", :surname "Surname"} fails spec: :spec-demo1.core/person? predicate: (contains? % :spec-demo1.core/surname)
+nil
