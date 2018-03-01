@@ -1,0 +1,91 @@
+valid?
+-------------------------------
+{:id 10, :name Rich, :surname Hickey}
+yes
+
+{:id 10, :name rich, :surname Hickey}
+no
+
+{:id 10, :name Rich, :surname hickey}
+no
+
+{:id -10, :name Rich, :surname Hickey}
+no
+
+{:id -10, :name rich, :surname hickey}
+no
+
+{:id 10, :name Rich, :surname Hickey, :e-mail rich@somewhere.org}
+yes
+
+{:id 10, :name Rich, :surname Hickey, :e-mail wrong}
+no
+
+{:id 10, :name Rich, :surname Hickey, :phone 123456789}
+yes
+
+{:id 10, :name Rich, :surname Hickey, :phone nil}
+no
+
+{:id 10, :name Rich, :surname Hickey, :phone 987654321, :e-mail rich@somewhere.org}
+yes
+
+{:id -10, :name rich, :surname , :phone -5, :e-mail wrong}
+no
+
+
+
+
+
+explain
+-------------------------------
+{:id 10, :name Rich, :surname Hickey}
+Success!
+nil
+
+{:id 10, :name rich, :surname Hickey}
+In: [:name] val: "rich" fails spec: :spec-demo5.core/name at: [:name] predicate: name?
+nil
+
+{:id 10, :name Rich, :surname hickey}
+In: [:surname] val: "hickey" fails spec: :spec-demo5.core/surname at: [:surname] predicate: surname?
+nil
+
+{:id -10, :name Rich, :surname Hickey}
+In: [:id] val: -10 fails spec: :spec-demo5.core/id at: [:id] predicate: pos-int?
+nil
+
+{:id -10, :name rich, :surname hickey}
+In: [:id] val: -10 fails spec: :spec-demo5.core/id at: [:id] predicate: pos-int?
+In: [:name] val: "rich" fails spec: :spec-demo5.core/name at: [:name] predicate: name?
+In: [:surname] val: "hickey" fails spec: :spec-demo5.core/surname at: [:surname] predicate: surname?
+nil
+
+{:id 10, :name Rich, :surname Hickey, :e-mail rich@somewhere.org}
+Success!
+nil
+
+{:id 10, :name Rich, :surname Hickey, :e-mail wrong}
+In: [:e-mail] val: "wrong" fails spec: :spec-demo5.core/e-mail at: [:e-mail] predicate: email?
+nil
+
+{:id 10, :name Rich, :surname Hickey, :phone 123456789}
+Success!
+nil
+
+{:id 10, :name Rich, :surname Hickey, :phone nil}
+In: [:phone] val: nil fails spec: :spec-demo5.core/phone at: [:phone] predicate: pos-int?
+nil
+
+{:id 10, :name Rich, :surname Hickey, :phone 987654321, :e-mail rich@somewhere.org}
+Success!
+nil
+
+{:id -10, :name rich, :surname , :phone -5, :e-mail wrong}
+In: [:id] val: -10 fails spec: :spec-demo5.core/id at: [:id] predicate: pos-int?
+In: [:name] val: "rich" fails spec: :spec-demo5.core/name at: [:name] predicate: name?
+In: [:surname] val: "" fails spec: :spec-demo5.core/surname at: [:surname] predicate: surname?
+In: [:phone] val: -5 fails spec: :spec-demo5.core/phone at: [:phone] predicate: pos-int?
+In: [:e-mail] val: "wrong" fails spec: :spec-demo5.core/e-mail at: [:e-mail] predicate: email?
+nil
+
