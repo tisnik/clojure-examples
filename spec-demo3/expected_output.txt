@@ -1,0 +1,36 @@
+get-name
+Rich
+rich
+Rich
+Rich
+rich
+
+checked-get-name
+Rich
+Exception in thread "main" java.lang.AssertionError: Assert failed: (spec/valid? :spec-demo3.core/person? person), compiling:(/tmp/form-init5569844852904633983.clj:1:73)
+	at clojure.lang.Compiler.load(Compiler.java:7526)
+	at clojure.lang.Compiler.loadFile(Compiler.java:7452)
+	at clojure.main$load_script.invokeStatic(main.clj:278)
+	at clojure.main$init_opt.invokeStatic(main.clj:280)
+	at clojure.main$init_opt.invoke(main.clj:280)
+	at clojure.main$initialize.invokeStatic(main.clj:311)
+	at clojure.main$null_opt.invokeStatic(main.clj:345)
+	at clojure.main$null_opt.invoke(main.clj:342)
+	at clojure.main$main.invokeStatic(main.clj:424)
+	at clojure.main$main.doInvoke(main.clj:387)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.lang.Var.applyTo(Var.java:702)
+	at clojure.main.main(main.java:37)
+Caused by: java.lang.AssertionError: Assert failed: (spec/valid? :spec-demo3.core/person? person)
+	at spec_demo3.core$checked_get_name.invokeStatic(core.clj:22)
+	at spec_demo3.core$checked_get_name.invoke(core.clj:22)
+	at spec_demo3.core$_main.invokeStatic(core.clj:39)
+	at spec_demo3.core$_main.doInvoke(core.clj:28)
+	at clojure.lang.RestFn.invoke(RestFn.java:397)
+	at clojure.lang.Var.invoke(Var.java:377)
+	at user$eval139.invokeStatic(form-init5569844852904633983.clj:1)
+	at user$eval139.invoke(form-init5569844852904633983.clj:1)
+	at clojure.lang.Compiler.eval(Compiler.java:7062)
+	at clojure.lang.Compiler.eval(Compiler.java:7052)
+	at clojure.lang.Compiler.load(Compiler.java:7514)
+	... 12 more
