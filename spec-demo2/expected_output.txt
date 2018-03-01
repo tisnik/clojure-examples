@@ -1,0 +1,27 @@
+valid?
+--------------------------------------------------
+true
+false
+false
+false
+false
+
+explain
+--------------------------------------------------
+Success!
+nil
+
+In: [:name] val: "rich" fails spec: :spec-demo2.core/name at: [:name] predicate: name?
+nil
+
+In: [:surname] val: "hickey" fails spec: :spec-demo2.core/surname at: [:surname] predicate: surname?
+nil
+
+In: [:id] val: -10 fails spec: :spec-demo2.core/id at: [:id] predicate: pos-int?
+nil
+
+In: [:id] val: -10 fails spec: :spec-demo2.core/id at: [:id] predicate: pos-int?
+In: [:name] val: "rich" fails spec: :spec-demo2.core/name at: [:name] predicate: name?
+In: [:surname] val: "hickey" fails spec: :spec-demo2.core/surname at: [:surname] predicate: surname?
+nil
+
