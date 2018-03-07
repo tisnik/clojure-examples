@@ -1,0 +1,132 @@
+validation-key :spec-demo11.core/ip-address
+value [127 0 0 1]
+nil
+
+validation-key :spec-demo11.core/ip-address
+value [255 255 255 255]
+nil
+
+validation-key :spec-demo11.core/ip-address
+value [192 168 0 1]
+nil
+
+validation-key :spec-demo11.core/ip-address
+value [0 0 0 -1]
+#:clojure.spec.alpha{:problems
+                     ({:path [3],
+                       :pred clojure.core/nat-int?,
+                       :val -1,
+                       :via
+                       [:spec-demo11.core/ip-address
+                        :spec-demo11.core/byte],
+                       :in [3]}),
+                     :spec :spec-demo11.core/ip-address,
+                     :value [0 0 0 -1]}
+
+validation-key :spec-demo11.core/ip-address
+value [1 2 3 4 5]
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred (clojure.core/= (clojure.core/count %) 4),
+                       :val [1 2 3 4 5],
+                       :via [:spec-demo11.core/ip-address],
+                       :in []}],
+                     :spec :spec-demo11.core/ip-address,
+                     :value [1 2 3 4 5]}
+
+validation-key :spec-demo11.core/ip-address
+value [x y z w]
+#:clojure.spec.alpha{:problems
+                     ({:path [0],
+                       :pred clojure.core/nat-int?,
+                       :val "x",
+                       :via
+                       [:spec-demo11.core/ip-address
+                        :spec-demo11.core/byte],
+                       :in [0]}
+                      {:path [1],
+                       :pred clojure.core/nat-int?,
+                       :val "y",
+                       :via
+                       [:spec-demo11.core/ip-address
+                        :spec-demo11.core/byte],
+                       :in [1]}
+                      {:path [2],
+                       :pred clojure.core/nat-int?,
+                       :val "z",
+                       :via
+                       [:spec-demo11.core/ip-address
+                        :spec-demo11.core/byte],
+                       :in [2]}
+                      {:path [3],
+                       :pred clojure.core/nat-int?,
+                       :val "w",
+                       :via
+                       [:spec-demo11.core/ip-address
+                        :spec-demo11.core/byte],
+                       :in [3]}),
+                     :spec :spec-demo11.core/ip-address,
+                     :value ["x" "y" "z" "w"]}
+
+validation-key :spec-demo11.core/ip-address-2
+value [127 0 0 1]
+nil
+
+validation-key :spec-demo11.core/ip-address-2
+value [255 255 255 255]
+nil
+
+validation-key :spec-demo11.core/ip-address-2
+value [192 168 0 1]
+nil
+
+validation-key :spec-demo11.core/ip-address-2
+value [0 0 0 -1]
+#:clojure.spec.alpha{:problems
+                     [{:path [:4th],
+                       :pred clojure.core/nat-int?,
+                       :val -1,
+                       :via
+                       [:spec-demo11.core/ip-address-2
+                        :spec-demo11.core/byte
+                        :spec-demo11.core/byte],
+                       :in [3]}],
+                     :spec :spec-demo11.core/ip-address-2,
+                     :value [0 0 0 -1]}
+
+validation-key :spec-demo11.core/ip-address-2
+value [1 2 3 4 5]
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :reason "Extra input",
+                       :pred
+                       (clojure.spec.alpha/cat
+                        :1st
+                        :spec-demo11.core/byte
+                        :2nd
+                        :spec-demo11.core/byte
+                        :3rd
+                        :spec-demo11.core/byte
+                        :4th
+                        :spec-demo11.core/byte),
+                       :val (5),
+                       :via [:spec-demo11.core/ip-address-2],
+                       :in [4]}],
+                     :spec :spec-demo11.core/ip-address-2,
+                     :value [1 2 3 4 5]}
+
+validation-key :spec-demo11.core/ip-address-2
+value [x y z w]
+#:clojure.spec.alpha{:problems
+                     [{:path [:1st],
+                       :pred clojure.core/nat-int?,
+                       :val "x",
+                       :via
+                       [:spec-demo11.core/ip-address-2
+                        :spec-demo11.core/ip-address-2
+                        :spec-demo11.core/byte
+                        :spec-demo11.core/byte],
+                       :in [0]}],
+                     :spec :spec-demo11.core/ip-address-2,
+                     :value ["x" "y" "z" "w"]}
+
