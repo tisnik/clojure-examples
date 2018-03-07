@@ -1,0 +1,75 @@
+validation-key :spec-demo12.core/user-id
+#0:  59033803
+#1:  13394
+#2:  104186169
+#3:  16706747
+#4:  440193707
+#5:  116487
+#6:  905027
+#7:  464669
+#8:  40352
+#9:  1460
+
+
+
+
+validation-key :spec-demo12.core/unique-id
+#0:  kSo4dm0Fjn1kvl0n0lVL2
+#1:  B2q3ThZ442L3sj4U4c
+#2:  oB11ShtmWj
+#3:  qiUkMcyg027V7BQ5KR9455h
+#4:  
+#5:  411640
+#6:  98602
+#7:  k
+#8:  8OJpvma
+#9:  oqG09AJKJGyxEHwgyhA9kjeGAql
+
+
+
+
+validation-key :spec-demo12.core/comment-ver1
+#0:  oLeX40PKWrG
+#1:  52ts09TxOik8fO2Y7vAYUT
+#2:  Rfoac85p
+#3:  nil
+#4:  nil
+#5:  nil
+#6:  1bVu1XG
+#7:  W1y8g7MuV1w
+#8:  nil
+#9:  ZNCz3hu1G70H3BE5owGae97cpk
+
+
+
+
+validation-key :spec-demo12.core/comment-ver2
+#0:  8sMXcl39lWDg642dtF7dV37sIb800
+#1:  T951gGeS3pD5KT1
+#2:  jp0K54INQ5Pb7kf948xE6XixsqNwH8
+#3:  VhcT24P090mxF06Rq
+#4:  tX14hRwPZw2T6RjjlOb19F01
+#5:  nil
+#6:  9RoXd2H25o09u
+#7:  KvqXN4NY9Mp9KF6
+#8:  8AAmSjz9SjvcQI3r6HfDneoFbVNg
+#9:  dMpIW9By4c2vjR8mfK0
+
+
+
+
+validation-key :spec-demo12.core/ip-address
+#0:  [73 210 0 2]
+#1:  [46 1 1 1]
+#2:  [37 1 127 20]
+#3:  [3 20 6 21]
+#4:  [181 0 1 1]
+#5:  [1 1 91 10]
+#6:  [12 83 28 179]
+#7:  [184 126 2 28]
+#8:  [12 171 26 14]
+#9:  [101 26 3 28]
+
+
+
+
