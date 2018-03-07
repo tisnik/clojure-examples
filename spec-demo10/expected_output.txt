@@ -1,0 +1,289 @@
+validation-key :spec-demo10.core/user-id
+value nil
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred clojure.core/pos-int?,
+                       :val nil,
+                       :via [:spec-demo10.core/user-id],
+                       :in []}],
+                     :spec :spec-demo10.core/user-id,
+                     :value nil}
+
+validation-key :spec-demo10.core/user-id
+value []
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred clojure.core/pos-int?,
+                       :val [],
+                       :via [:spec-demo10.core/user-id],
+                       :in []}],
+                     :spec :spec-demo10.core/user-id,
+                     :value []}
+
+validation-key :spec-demo10.core/user-id
+value 1/2
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred clojure.core/pos-int?,
+                       :val 1/2,
+                       :via [:spec-demo10.core/user-id],
+                       :in []}],
+                     :spec :spec-demo10.core/user-id,
+                     :value 1/2}
+
+validation-key :spec-demo10.core/user-id
+value 0.5
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred clojure.core/pos-int?,
+                       :val 0.5,
+                       :via [:spec-demo10.core/user-id],
+                       :in []}],
+                     :spec :spec-demo10.core/user-id,
+                     :value 0.5}
+
+validation-key :spec-demo10.core/user-id
+value 1
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred
+                       (clojure.core/fn [%] (clojure.core/>= % 1000)),
+                       :val 1,
+                       :via [:spec-demo10.core/user-id],
+                       :in []}],
+                     :spec :spec-demo10.core/user-id,
+                     :value 1}
+
+validation-key :spec-demo10.core/user-id
+value 10000000000
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred
+                       (clojure.core/fn
+                        [%]
+                        (clojure.core/< % Integer/MAX_VALUE)),
+                       :val 10000000000,
+                       :via [:spec-demo10.core/user-id],
+                       :in []}],
+                     :spec :spec-demo10.core/user-id,
+                     :value 10000000000}
+
+validation-key :spec-demo10.core/user-id
+value *?
+#:clojure.spec.alpha{:problems
+                     [{:path [],
+                       :pred clojure.core/pos-int?,
+                       :val "*?",
+                       :via [:spec-demo10.core/user-id],
+                       :in []}],
+                     :spec :spec-demo10.core/user-id,
+                     :value "*?"}
+
+validation-key :spec-demo10.core/unique-id
+value nil
+#:clojure.spec.alpha{:problems
+                     ({:path [:name],
+                       :pred clojure.core/string?,
+                       :val nil,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}
+                      {:path [:id],
+                       :pred clojure.core/pos-int?,
+                       :val nil,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}),
+                     :spec :spec-demo10.core/unique-id,
+                     :value nil}
+
+validation-key :spec-demo10.core/unique-id
+value []
+#:clojure.spec.alpha{:problems
+                     ({:path [:name],
+                       :pred clojure.core/string?,
+                       :val [],
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}
+                      {:path [:id],
+                       :pred clojure.core/pos-int?,
+                       :val [],
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}),
+                     :spec :spec-demo10.core/unique-id,
+                     :value []}
+
+validation-key :spec-demo10.core/unique-id
+value 1/2
+#:clojure.spec.alpha{:problems
+                     ({:path [:name],
+                       :pred clojure.core/string?,
+                       :val 1/2,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}
+                      {:path [:id],
+                       :pred clojure.core/pos-int?,
+                       :val 1/2,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}),
+                     :spec :spec-demo10.core/unique-id,
+                     :value 1/2}
+
+validation-key :spec-demo10.core/unique-id
+value 0.5
+#:clojure.spec.alpha{:problems
+                     ({:path [:name],
+                       :pred clojure.core/string?,
+                       :val 0.5,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}
+                      {:path [:id],
+                       :pred clojure.core/pos-int?,
+                       :val 0.5,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}),
+                     :spec :spec-demo10.core/unique-id,
+                     :value 0.5}
+
+validation-key :spec-demo10.core/unique-id
+value -1
+#:clojure.spec.alpha{:problems
+                     ({:path [:name],
+                       :pred clojure.core/string?,
+                       :val -1,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}
+                      {:path [:id],
+                       :pred clojure.core/pos-int?,
+                       :val -1,
+                       :via [:spec-demo10.core/unique-id],
+                       :in []}),
+                     :spec :spec-demo10.core/unique-id,
+                     :value -1}
+
+validation-key :spec-demo10.core/comment-ver1
+value 42
+#:clojure.spec.alpha{:problems
+                     ({:path [:filled],
+                       :pred clojure.core/string?,
+                       :val 42,
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}
+                      {:path [:empty],
+                       :pred clojure.core/nil?,
+                       :val 42,
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}),
+                     :spec :spec-demo10.core/comment-ver1,
+                     :value 42}
+
+validation-key :spec-demo10.core/comment-ver1
+value []
+#:clojure.spec.alpha{:problems
+                     ({:path [:filled],
+                       :pred clojure.core/string?,
+                       :val [],
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}
+                      {:path [:empty],
+                       :pred clojure.core/nil?,
+                       :val [],
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}),
+                     :spec :spec-demo10.core/comment-ver1,
+                     :value []}
+
+validation-key :spec-demo10.core/comment-ver1
+value {}
+#:clojure.spec.alpha{:problems
+                     ({:path [:filled],
+                       :pred clojure.core/string?,
+                       :val {},
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}
+                      {:path [:empty],
+                       :pred clojure.core/nil?,
+                       :val {},
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}),
+                     :spec :spec-demo10.core/comment-ver1,
+                     :value {}}
+
+validation-key :spec-demo10.core/comment-ver1
+value 1/2
+#:clojure.spec.alpha{:problems
+                     ({:path [:filled],
+                       :pred clojure.core/string?,
+                       :val 1/2,
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}
+                      {:path [:empty],
+                       :pred clojure.core/nil?,
+                       :val 1/2,
+                       :via [:spec-demo10.core/comment-ver1],
+                       :in []}),
+                     :spec :spec-demo10.core/comment-ver1,
+                     :value 1/2}
+
+validation-key :spec-demo10.core/comment-ver2
+value 42
+#:clojure.spec.alpha{:problems
+                     [{:path [:clojure.spec.alpha/pred],
+                       :pred clojure.core/string?,
+                       :val 42,
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}
+                      {:path [:clojure.spec.alpha/nil],
+                       :pred nil?,
+                       :val 42,
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}],
+                     :spec :spec-demo10.core/comment-ver2,
+                     :value 42}
+
+validation-key :spec-demo10.core/comment-ver2
+value []
+#:clojure.spec.alpha{:problems
+                     [{:path [:clojure.spec.alpha/pred],
+                       :pred clojure.core/string?,
+                       :val [],
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}
+                      {:path [:clojure.spec.alpha/nil],
+                       :pred nil?,
+                       :val [],
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}],
+                     :spec :spec-demo10.core/comment-ver2,
+                     :value []}
+
+validation-key :spec-demo10.core/comment-ver2
+value {}
+#:clojure.spec.alpha{:problems
+                     [{:path [:clojure.spec.alpha/pred],
+                       :pred clojure.core/string?,
+                       :val {},
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}
+                      {:path [:clojure.spec.alpha/nil],
+                       :pred nil?,
+                       :val {},
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}],
+                     :spec :spec-demo10.core/comment-ver2,
+                     :value {}}
+
+validation-key :spec-demo10.core/comment-ver2
+value 1/2
+#:clojure.spec.alpha{:problems
+                     [{:path [:clojure.spec.alpha/pred],
+                       :pred clojure.core/string?,
+                       :val 1/2,
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}
+                      {:path [:clojure.spec.alpha/nil],
+                       :pred nil?,
+                       :val 1/2,
+                       :via [:spec-demo10.core/comment-ver2],
+                       :in []}],
+                     :spec :spec-demo10.core/comment-ver2,
+                     :value 1/2}
+
