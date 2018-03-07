@@ -1,0 +1,51 @@
+-------------------------------
+Validation
+-------------------------------
+
+comment= nil
+valid
+
+comment= 42
+invalid
+
+comment= []
+invalid
+
+comment= text
+valid
+
+comment= text
+on
+four
+lines
+valid
+
+-------------------------------
+Explain validation failures
+-------------------------------
+
+comment-value nil
+Success!
+nil
+
+comment-value 42
+val: 42 fails spec: :spec-demo8.core/comment at: [:filled] predicate: string?
+val: 42 fails spec: :spec-demo8.core/comment at: [:empty] predicate: nil?
+nil
+
+comment-value []
+val: [] fails spec: :spec-demo8.core/comment at: [:filled] predicate: string?
+val: [] fails spec: :spec-demo8.core/comment at: [:empty] predicate: nil?
+nil
+
+comment-value text
+Success!
+nil
+
+comment-value text
+on
+four
+lines
+Success!
+nil
+
