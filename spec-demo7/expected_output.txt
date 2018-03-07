@@ -1,0 +1,112 @@
+-------------------------------
+Validation
+-------------------------------
+
+id= nil
+invalid
+
+id= []
+invalid
+
+id= 1/2
+invalid
+
+id= 0.5
+invalid
+
+id= -1
+invalid
+
+id= 42
+valid
+
+id= 0
+invalid
+
+id= 
+valid
+
+id= 1
+valid
+
+id= 1000
+valid
+
+id= 10000
+valid
+
+id= 1000000000
+valid
+
+id= 10000000000
+valid
+
+id= *?
+valid
+
+-------------------------------
+Explain validation failures
+-------------------------------
+
+id= nil
+val: nil fails spec: :spec-demo7.core/unique-id at: [:name] predicate: string?
+val: nil fails spec: :spec-demo7.core/unique-id at: [:id] predicate: pos-int?
+nil
+
+id= []
+val: [] fails spec: :spec-demo7.core/unique-id at: [:name] predicate: string?
+val: [] fails spec: :spec-demo7.core/unique-id at: [:id] predicate: pos-int?
+nil
+
+id= 1/2
+val: 1/2 fails spec: :spec-demo7.core/unique-id at: [:name] predicate: string?
+val: 1/2 fails spec: :spec-demo7.core/unique-id at: [:id] predicate: pos-int?
+nil
+
+id= 0.5
+val: 0.5 fails spec: :spec-demo7.core/unique-id at: [:name] predicate: string?
+val: 0.5 fails spec: :spec-demo7.core/unique-id at: [:id] predicate: pos-int?
+nil
+
+id= -1
+val: -1 fails spec: :spec-demo7.core/unique-id at: [:name] predicate: string?
+val: -1 fails spec: :spec-demo7.core/unique-id at: [:id] predicate: pos-int?
+nil
+
+id= 42
+Success!
+nil
+
+id= 0
+val: 0 fails spec: :spec-demo7.core/unique-id at: [:name] predicate: string?
+val: 0 fails spec: :spec-demo7.core/unique-id at: [:id] predicate: pos-int?
+nil
+
+id= 
+Success!
+nil
+
+id= 1
+Success!
+nil
+
+id= 1000
+Success!
+nil
+
+id= 10000
+Success!
+nil
+
+id= 1000000000
+Success!
+nil
+
+id= 10000000000
+Success!
+nil
+
+id= *?
+Success!
+nil
+
