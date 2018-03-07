@@ -1,0 +1,57 @@
+-------------------------------
+Validation
+-------------------------------
+
+id= -1
+invalid
+
+id= 0
+invalid
+
+id= 1
+invalid
+
+id= 1000
+valid
+
+id= 10000
+valid
+
+id= 1000000000
+valid
+
+id= 10000000000
+invalid
+
+-------------------------------
+Explain validation failures
+-------------------------------
+
+id= -1
+val: -1 fails spec: :spec-demo6.core/user-id predicate: pos-int?
+nil
+
+id= 0
+val: 0 fails spec: :spec-demo6.core/user-id predicate: pos-int?
+nil
+
+id= 1
+val: 1 fails spec: :spec-demo6.core/user-id predicate: (>= % 1000)
+nil
+
+id= 1000
+Success!
+nil
+
+id= 10000
+Success!
+nil
+
+id= 1000000000
+Success!
+nil
+
+id= 10000000000
+val: 10000000000 fails spec: :spec-demo6.core/user-id predicate: (< % MAX_VALUE)
+nil
+
