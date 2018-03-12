@@ -1,0 +1,49 @@
+lein test factorial4.core-test
+
+lein test :only factorial4.core-test/negative-factorial-test
+
+FAIL in (negative-factorial-test) (core_test.clj:15)
+Negative tests
+negative test case #1
+expected: (= (factorial 0) 0)
+  actual: (not (= 1 0))
+
+lein test :only factorial4.core-test/negative-factorial-test
+
+FAIL in (negative-factorial-test) (core_test.clj:16)
+Negative tests
+negative test case #2
+expected: (= (factorial 1) 0)
+  actual: (not (= 1 0))
+
+lein test :only factorial4.core-test/negative-factorial-test
+
+FAIL in (negative-factorial-test) (core_test.clj:17)
+Negative tests
+negative test case #3
+expected: (= (factorial 2) 0)
+  actual: (not (= 2 0))
+
+lein test :only factorial4.core-test/negative-exception-test
+
+FAIL in (negative-exception-test) (core_test.clj:27)
+(negative test) If factorial throws exception
+expected: (thrown? IllegalArgumentException (factorial 1))
+  actual: nil
+
+lein test :only factorial4.core-test/negative-exception-test
+
+FAIL in (negative-exception-test) (core_test.clj:28)
+(negative test) If factorial throws exception
+expected: (thrown? IllegalArgumentException (factorial 2))
+  actual: nil
+
+lein test :only factorial4.core-test/negative-exception-test
+
+FAIL in (negative-exception-test) (core_test.clj:29)
+(negative test) If factorial throws exception
+expected: (thrown? IllegalArgumentException (factorial 3))
+  actual: nil
+
+Ran 4 tests containing 14 assertions.
+6 failures, 0 errors.
