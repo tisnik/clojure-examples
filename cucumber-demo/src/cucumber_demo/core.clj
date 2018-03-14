@@ -6,7 +6,7 @@
     [n]
     (if (neg? n)
         (throw (IllegalArgumentException. "negative numbers are not supported!"))
-        (apply * (range 1 (inc n)))))
+        (apply * (range 1M (inc n)))))
 
 ; otestujeme funkci faktorial
 (defn -main
