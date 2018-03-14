@@ -1,0 +1,11 @@
+lein test humane-output.core-test
+
+lein test :only humane-output.core-test/test-generate-response
+
+FAIL in (test-generate-response) (core_test.clj:18)
+Function generate-response
+expected: (= expected-response (generate-response "hello world!"))
+  actual: (not (= {:status 200, :headers {"Content-Type" "text/plain; charset=utf-8", "Cache-Control" ["must-revalidate" "no-cache" "no-store"], "Expires" "-1", "Pragma" "no-cache"}, :body "hello world!"} {:status 200, :headers {"Content-Type" "text/plain; charset=utf-8", "Cache-Control" ["must-revalidate" "no-cache" "no-store"], "Expires" "0", "Pragma" "no-cache"}, :body "hello world!"}))
+
+Ran 1 tests containing 1 assertions.
+1 failures, 0 errors.
