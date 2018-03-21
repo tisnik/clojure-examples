@@ -1,0 +1,35 @@
+Running cucumber...
+Looking for features in:  [/home/tester/temp/clojure/clojure-examples/cucumber+expect2/test/features]
+Looking for glue in:  [/home/tester/temp/clojure/clojure-examples/cucumber+expect2/test/features/step_definitions]
+UUUUUUUUUU
+
+2 Scenarios (2 undefined)
+10 Steps (10 undefined)
+0m0.000s
+
+
+You can implement missing steps with the snippets below:
+
+(Given #"^The function factorial is callable$" []
+  (comment  Write code here that turns the phrase above into concrete actions  )
+  (throw (cucumber.api.PendingException.)))
+
+(When #"^I try to compute (\d+)!$" [arg1]
+  (comment  Write code here that turns the phrase above into concrete actions  )
+  (throw (cucumber.api.PendingException.)))
+
+(Then #"^I should get result (\d+)$" [arg1]
+  (comment  Write code here that turns the phrase above into concrete actions  )
+  (throw (cucumber.api.PendingException.)))
+
+(When #"^I try to compute -(\d+)!$" [arg1]
+  (comment  Write code here that turns the phrase above into concrete actions  )
+  (throw (cucumber.api.PendingException.)))
+
+(Then #"^the IllegalArgumentException should be thrown$" []
+  (comment  Write code here that turns the phrase above into concrete actions  )
+  (throw (cucumber.api.PendingException.)))
+
+
+Ran 0 tests containing 0 assertions in 9 msecs
+0 failures, 0 errors.

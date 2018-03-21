@@ -1,7 +1,16 @@
 (ns cucumber+expect2.core
-  (:gen-class))
+    (:gen-class))
 
+; funkce faktorial obsahuje i test na zaporne hodnoty
+(defn factorial
+    [n]
+    (if (neg? n)
+        (throw (IllegalArgumentException. "negative numbers are not supported!"))
+        (apply * (range 1M (inc n)))))
+
+; otestujeme funkci faktorial
 (defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+    [& args]
+    (doseq [i (range 0 10)]
+        (println i "! = " (factorial i))))
+
