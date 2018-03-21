@@ -1,0 +1,28 @@
+Running cucumber...
+Looking for features in:  [/home/tester/temp/clojure/clojure-examples/cucumber+expect3/test/features]
+Looking for glue in:  [/home/tester/temp/clojure/clojure-examples/cucumber+expect3/test/features/step_definitions]
+........FU
+
+Failed scenarios:
+factorial.feature:13 # Scenario: Compute factorial for negative numbers
+
+2 Scenarios (1 failed, 1 passed)
+10 Steps (1 failed, 1 undefined, 8 passed)
+0m0.136s
+
+java.lang.IllegalArgumentException: negative numbers are not supported!
+        at cucumber_PLUS_expect3.core$factorial.invokeStatic(core.clj:7)
+        at clojure.main.main(main.java:37)
+        at ✽.When I try to compute -1!(factorial.feature:15)
+
+
+You can implement missing steps with the snippets below:
+
+(Then #"^the IllegalArgumentException should be thrown$" []
+  (comment  Write code here that turns the phrase above into concrete actions  )
+  (throw (cucumber.api.PendingException.)))
+
+
+Ran 1 tests containing 1 assertions in 11 msecs
+0 failures, 0 errors.
+
