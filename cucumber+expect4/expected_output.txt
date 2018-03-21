@@ -1,0 +1,12 @@
+Running cucumber...
+Looking for features in:  [/home/tester/temp/clojure/clojure-examples/cucumber+expect4/test/features]
+Looking for glue in:  [/home/tester/temp/clojure/clojure-examples/cucumber+expect4/test/features/step_definitions]
+..........
+
+2 Scenarios (2 passed)
+10 Steps (10 passed)
+0m0.130s
+
+
+Ran 5 tests containing 5 assertions in 13 msecs
+0 failures, 0 errors.
