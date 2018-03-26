@@ -1,6 +1,6 @@
 (ns cucumber+expect6.core-test
   (:require [clojure.test :refer :all]
-            [cucumber+expect5.core :refer :all]))
+            [cucumber+expect6.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."
