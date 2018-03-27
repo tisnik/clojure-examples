@@ -1,7 +1,8 @@
 (require '[expectations :refer [expect]])
 
 
-(def URL "https://github.com/")
+(def URL "https://github.com")
+(def API-URL "https://api.github.com")
 
 (def context (atom {:response nil}))
 
@@ -25,7 +26,7 @@
 
 (When #"^I access the API endpoint /$"
     []
-    (let [response (request (str URL "/"))]
+    (let [response (request (str API-URL "/"))]
         (swap! context assoc :response response)))
 
 
