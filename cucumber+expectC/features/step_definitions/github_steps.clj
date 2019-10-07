@@ -2,10 +2,8 @@
 (require '[clojure.data.json :as json])
 
 
-(def URL "https://github.com/")
-(def API-URL "https://api.github.com")
-
-(def context (atom {:response nil}))
+(def context (atom {:response nil
+                    :api-url nil}))
 
 (System/setProperty "https.protocols" "TLSv1,TLSv1.1,TLSv1.2")
 
@@ -19,21 +17,25 @@
            :content (slurp (.getInputStream connection))}))
 
 
-(Given #"^GitHub is accessible$"
-    []
-    (let [response (request URL)]
+(Given #"^REST API for ([A-Za-z]+) service is accessible on URL (.*)$"
+    [service url]
+    (swap! context assoc :api-url url)
+    (let [api-url  (:api-url @context)
+          response (request (:api-url @context))]
         (expect (:status response) 200)))
 
 
 (When #"^I access the API endpoint (.+)$"
     [endpoint]
-    (let [response (request (str API-URL endpoint))]
+    (let [api-url  (:api-url @context)
+          response (request (str api-url endpoint))]
         (swap! context assoc :response response)))
 
 
 (When #"^I search for user with nick ([A-Za-z0-9]+)$"
     [nick]
-    (let [response (request (str API-URL "/users/" nick))]
+    (let [api-url  (:api-url @context)
+          response (request (str api-url "/users/" nick))]
         (swap! context assoc :response response)))
 
 
