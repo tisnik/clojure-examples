@@ -10,5 +10,5 @@
 
 (let [n (range 1000000 1000020)
       results (doall (map #(compute-pi %) n))]
-  (doseq [pi (doall results)]
+  (doseq [pi results]
     (println pi)))
