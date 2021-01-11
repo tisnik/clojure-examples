@@ -1,5 +1,33 @@
 ; Ukázky použití rozhodovacích konstrukcí v programovacím jazyku Clojure
 
+; Popsány a použity budou následující rozhodovací konstrukce
+; -------------------------------------------------------------------------------------------------------------
+; | #  | Konstrukce  | Typ                 | Stručný popis                                                    |
+; -------------------------------------------------------------------------------------------------------------
+; |  1 | if          | speciální forma     | základní rozhodovací konstrukce, základ pro další makra          |
+; |  2 | if+do       | dvě speciální formy | kombinace použitá ve chvíli nutnosti použití více výrazů         |
+; |  3 | if-let      | makro               |
+; |  4 | if-some     | makro               |
+; |  5 | and         | makro               |
+; |  6 | or          | makro               |
+; |  7 | when        |
+; |  8 | when-not    |
+; |  9 | when-let    |
+; | 10 | when-some   |
+; | 11 | when-first  |
+; | 12 | cond        |
+; | 13 | cond + else |
+; | 14 | condp       |
+; | 15 | conde       |
+; | 16 | condu       |
+; | 17 | conda       |
+; | 18 | cond->      |
+; | 19 | cond->>     |
+; | 20 | case        |
+; | 21 | case + else |
+; | 22 | cond-table  |makro | nová nestandardní konstrukce se zdrojovým kódem zmíněným na konci druhého článku
+; -------------------------------------------------------------------------------------------------------------
+
 (ns conditions.core)
 
 ; Poněkud netradičně je nutné používat funkce a makra ze jmenného prostoru
@@ -292,6 +320,172 @@
 ; makra "if-let" a těla "then" s funkcí "println":
 (if-let [name (not-empty (read-line))]
   (println "Hello!" name))
+
+; Pro zajímavost se nyní podívejme na plnou expanzi předchozího skriptu, který
+; je založen na makru "if-let":
+(macroexpand
+  '(if-let [name (not-empty (read-line))]
+    (println "Hello!" name)))
+
+; Z výsledku je patrné, že byla použita automaticky vytvořená lokální proměnná:
+;; (let*
+;;  [temp__5733__auto__ (not-empty (read-line))]
+;;  (if
+;;   temp__5733__auto__
+;;   (clojure.core/let [name temp__5733__auto__] (println "Hello!" name))
+;;   nil))
+
+; Podobně jako k "if" existuje varianta "if-let" je k makru "when" vytvořena jeho obdoba nazvaná "when-let":
+(doc when-let)
+;; -------------------------
+;; clojure.core/when-let
+;; ([bindings & body])
+;; Macro
+;;  bindings => binding-form test
+;;
+;;  When test is true, evaluates body with binding-form bound to the value of test
+
+; Opět se podívejme na příklad použití tohoto makra. Konkrétně se bude jednat o
+; přepis následujícího skriptu:
+(let [name (read-line)]
+  (when (not-empty name)
+    (print "Hello! ")
+    (println name)
+    name)) ; návratová hodnota
+
+; Na jeho kratší variantu:
+(when-let [name (not-empty (read-line))]
+  (print "Hello! ")
+  (println name)
+  name) ; návratová hodnota
+
+; Expanze tohoto makra:
+(macroexpand-1
+  '(when-let [name (not-empty (read-line))]
+    (print "Hello! ")
+    (println name)
+    name))
+
+; Nyní již expanze není příliš přímočará:
+;; (clojure.core/let
+;;  [temp__5735__auto__ (not-empty (read-line))]
+;;  (clojure.core/when
+;;   temp__5735__auto__
+;;   (clojure.core/let
+;;    [name temp__5735__auto__]
+;;    (print "Hello! ")
+;;    (println name)
+;;    name)))
+
+; V některých programovacích jazycích je zvykem nahrazovat některé rozhodovací
+; konstrukce (resp. přesněji řečeno podmínky) s využitím Booleovských operátorů
+; "and" a "or". Podobný koncept můžeme použít i v jazyce Clojure s využitím
+; maker nazvaných taktéž "and" a "or", které jsou n-ární, tj. akceptují
+; libovolný počet parametrů:
+(doc and)
+;;  -------------------------
+;; clojure.core/and
+;; ([] [x] [x & next])
+;; Macro
+;;   Evaluates exprs one at a time, from left to right. If a form
+;;   returns logical false (nil or false), and returns that value and
+;;   doesn't evaluate any of the other expressions, otherwise it returns
+;;   the value of the last expr. (and) returns true.
+
+(doc or)
+;; -------------------------
+;; clojure.core/or
+;; ([] [x] [x & next])
+;; Macro
+;;   Evaluates exprs one at a time, from left to right. If a form
+;;   returns a logical true value, or returns that value and doesn't
+;;   evaluate any of the other expressions, otherwise it returns the
+;;   value of the last expression. (or) returns nil.
+;; 
+
+; Předností použití těchto maker může být fakt, že se složitější podmínky a
+; současně i větev, která se má vykonat, mohou zapsat jediným výrazem - obě
+; makra totiž akceptují proměnný počet parametrů.
+
+; Následuje příklad použití těchto dvou maker pro implementaci funkce, která
+; vrátí znaménko čísla, které je této funkci předáno. Pro kladná čísla se vrátí
+; +1, pro záporná čísla -1 a pro nulu nula:
+(defn sgn
+  [x]
+  (or (and (> x 0) +1)
+      (and (< x 0) -1)
+      0))
+
+; Alternativní zápis s predikáty:
+(defn sgn
+  [x]
+  (or (and (pos? x) +1)
+      (and (neg? x) -1)
+      0))
+
+; Otestování funkcionality:
+(println (sgn -100))
+(println (sgn 0))
+(println (sgn 100))
+
+; Na závěr se ještě zmiňme o speciálních formách programovacího jazyka Clojure.
+; V tomto článku jsme se setkali se čtyřmi speciálními formami (jsou uvedeny na
+; začátku tabulky), ovšem pro úplnost si je vypišme všechny:
+;
+; -------------------------------------------------------------------------------------------------------------
+; | #  | Speciální forma | Stručný popis speciální formy                                                      |
+; -------------------------------------------------------------------------------------------------------------
+; |  1 | def             | definice nového jména navázaného na hodnotu                                        |
+; |  2 | if              | podmíněné vyhodnocení prvního či druhého podvýrazu na základě vyhodnocené podmínky |
+; |  3 | do              | vyhodnocení více výrazů, vrátí se návratová hodnota posledního z nich              |
+; |  4 | let             | blok, na který je navázána nová lokální proměnná či proměnné                       |
+; |  5 | quote           | zakazuje vyhodnocení podvýrazu (tedy seznamu)                                      |
+; |  6 | var             | vrací objekt typu Var (nikoli jeho hodnotu), varianta quote                        |
+; |  7 | fn              | definice (anonymní) funkce nebo uzávěru                                            |
+; |  8 | loop            | použito pro konstrukci smyčky - cíl pro recur                                      |
+; |  9 | recur           | skok na začátek smyčky s novými hodnotami navázanými na jména v recur              |
+; | 10 | throw           | vyhození výjimky                                                                   |
+; | 11 | try             | vyhodnocení výrazů se zachycením výjimky                                           |
+; | 12 | monitor-enter   | nízkoúrovňové synchronizační primitivum                                            |
+; | 13 | monitor-exit    | nízkoúrovňové synchronizační primitivum                                            |
+; | 14 | .               | přístup k metodám a atributům objektu                                              |
+; | 15 | new             | konstrukce instance třídy                                                          |
+; | 16 | set!            | nastavení hodnoty lokální proměnné v aktuálním vláknu                              |
+; -------------------------------------------------------------------------------------------------------------
+
+; Poněkud odlišná je sada speciálních forem v jazyku Scheme (což je taktéž
+; LISPovský programovací jazyk):
+;
+; -------------------------------------------------------------------------------------------------------------
+; | #  | Speciální forma | Stručný popis speciální formy                                                      |
+; -------------------------------------------------------------------------------------------------------------
+; |  1 | lambda          | vytvoření anonymní funkce nebo uzávěru                                             |
+; |  2 | define          | definice nové proměnné (může jít i o funkci)                                       |
+; |  3 | quote           | zakazuje vyhodnocení podvýrazu (tedy seznamu)                                      |
+; |  4 | set!            | změna hodnoty proměnné                                                             |
+; |  5 | let             | blok, na který je navázána nová lokální proměnná či proměnné                       |
+; |  6 | let*            | podobné "let", ovšem umožňuje při inicializaci proměnných použít proměnné nalevo   |
+; |    |                 | (nahoře) od právě deklarované proměnné                                             |
+; |  7 | letrec          | podobné "let", ovšem navíc je možné se při inicializaci proměnných rekurzivně      |
+; |    |                 | odkazovat na další proměnné                                                        |
+; |  8 | letrec*         | kombinace "let*" a "letrec"                                                        |
+; |  9 | begin           | umožňuje definovat blok s více výrazy, které se postupně vyhodnotí                 |
+; | 10 | if              | podmíněné vyhodnocení prvního či druhého podvýrazu na základě vyhodnocené podmínky |
+; | 11 | cond            | vícenásobné rozvětvení (vyhodnocení podvýrazů)                                     |
+; | 12 | case            | rozeskok na základě hodnoty vyhodnoceného podvýrazu                                |
+; | 13 | when            | pokud je podmínka splněna, vyhodnotí všechny podvýrazy                             |
+; | 14 | unless          | pokud podmínka není splněna, vyhodnotí všechny podvýrazy                           |
+; | 15 | and             | zkrácené vyhodnocení logického součinu                                             |
+; | 16 | or              | zkrácené vyhodnocení logického součtu                                              |
+; | 17 | do              | zápis iterace s inicializací logických proměnných i s jejich změnou v každé iteraci|
+; -------------------------------------------------------------------------------------------------------------
+
+; Poznámka: povšimněte si odlišných významů některých speciálních forem.
+; Zejména se to týká formy "do", jejíž význam je v Clojure odlišný od Scheme.
+; Taktéž formy "cond", "case", "and" a "or" ze Scheme jsou v Clojure definovány
+; formou maker, namísto "when-not" se používá "unless" atd.
+
+
 
 (defn -main
   [& args]
