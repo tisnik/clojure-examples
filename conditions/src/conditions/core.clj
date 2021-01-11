@@ -5,8 +5,8 @@
 ; | #  | Konstrukce  | Typ                 | Stručný popis                                                    |
 ; -------------------------------------------------------------------------------------------------------------
 ; |  1 | if          | speciální forma     | základní rozhodovací konstrukce, základ pro další makra          |
-; |  2 | if+do       | dvě speciální formy | kombinace použitá ve chvíli nutnosti použití více výrazů         |
-; |  3 | if-let      | makro               |
+; |  2 | if+do       | dvě speciální formy | použito ve chvíli, kdy je nutné do jedné větve či obou větví zapsat více výrazů |
+; |  3 | if-let      | makro               | 
 ; |  4 | if-some     | makro               |
 ; |  5 | and         | makro               |
 ; |  6 | or          | makro               |
@@ -33,6 +33,11 @@
 ; Poněkud netradičně je nutné používat funkce a makra ze jmenného prostoru
 ; "clojure.repl", zejména funkci "doc":
 (use 'clojure.repl)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Speciální forma if
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Všechna makra popsaná v dalším textu jsou založena na využití speciální formy
 ; if, jejíž varianty si popíšeme v tomto oddílu.
@@ -128,6 +133,11 @@
 ; Poznámka: v předchozím příkladu je fakt, že se jedná o zápis výrazu ještě
 ; zvýrazněn tím, že není použit příkaz "return".
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Použití speciální formy if s oběma větvemi a problematika více volaných funkcí ve větvích
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; Vraťme se však k programovacímu jazyku Clojure. Již jsme si řekli, že je
 ; podporována i speciální forma "if" s oběma větvemi "then" i "else". Zápis je
 ; v tomto případě jednoduchý:
@@ -195,6 +205,11 @@
 ;; 
 ;;   Please see http://clojure.org/special_forms#do
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Makra when a when-not
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; Ve skutečnosti je však výše zmíněná kombinace "if" + "do" velmi špatně
 ; čitelná, nehledě na to, že se kód začíná ztrácet ve velkém množství kulatých
 ; závorek. Existuje však i (pro mnoho účelů) lepší řešení. Pokud konstrukce
@@ -256,6 +271,8 @@
 ; název makra "when-not", není nic jednoduššího, než si vytvořit vlastní makro
 ; typicky nazvané "unless":
 
+(defmacro unless [& args] `(when-not ~@args))
+
 ; Poznámka: "unless" není náhodně zvolené jméno, protože ho najdeme v mnoha
 ; interpreterech a překladačích programovacího jazyka Scheme. Příkladem může
 ; být Racket: https://docs.racket-lang.org/reference/when_unless.html
@@ -291,6 +308,45 @@
 ;;  (< x y)
 ;;  nil
 ;;  (do (println "----------") (println "x < y") (println "----------") (+ x y)))
+
+; Zajímavější je situace, která nastane při expanzi makra "unless", které se
+; expanduje na jiné makro, konkrétně na "when-not":
+(defmacro unless [& args] `(when-not ~@args))
+
+; Ostatně se sami podívejme, jak vypadá výsledek jedné expanze:
+(macroexpand-1
+  '(unless (< x y)
+    (println "----------")
+    (println "x < y")
+    (println "----------")
+    (+ x y)))
+
+; Výsledkem je pouhá náhrada makra "unless" za "when-not":
+;; (clojure.core/when-not
+;;  (< x y)
+;;  (println "----------")
+;;  (println "x < y")
+;;  (println "----------")
+;;  (+ x y))
+
+; Úplnou expanzi si můžeme zobrazit pomocí "macroexpand":
+(macroexpand
+  '(unless (< x y)
+    (println "----------")
+    (println "x < y")
+    (println "----------")
+    (+ x y)))
+
+; S tímto výsledkem:
+;; (if
+;;  (< x y)
+;;  nil
+;;  (do (println "----------") (println "x < y") (println "----------") (+ x y)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Kombinace speciálních forem if a let
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Prozatím jsme si ukázali zejména speciální formu "if" a způsoby nahrazení
 ; této formy v případě, že je zapotřebí vykonat jednu vícekrokovou větev.
@@ -335,7 +391,33 @@
 ;;   (clojure.core/let [name temp__5733__auto__] (println "Hello!" name))
 ;;   nil))
 
-; Podobně jako k "if" existuje varianta "if-let" je k makru "when" vytvořena jeho obdoba nazvaná "when-let":
+; Otestujme si, zda "if-let" vrací nějakou hodnotu:
+
+(if-let [name (not-empty (read-line))]
+  (str "Hello! " name))
+
+; Úplná forma makra "if-let" s větví "else" vypadá následovně:
+(if-let [name (not-empty (read-line))]
+  (str "Hello! " name)
+  :nothing)
+
+; Tento výraz vrátí buď řetězec "Hello! (zadaný řetězec)" nebo hodnotu "nil".
+
+; Pozor: toto makro obsahuje jednu past: pokud přistoupíte k lokálnímu jménu z
+; větve "else", vrátí se nikoli hodnota (ta není navázána), ale identifikátor
+; ve stylu "Name= clojure.core$name@14df1ec3"
+(if-let [name (not-empty (read-line))]
+  (str "Hello! " name)
+  (str "Name= " name))
+
+; Úprava je v tomto případě snadná, i když ne na první pohled zřejmá: musíme
+; použít unikátní jméno namísto existující funkce "name":
+(if-let [x (not-empty (read-line))]
+  (str "Hello! " x)
+  (str "Name= " x))
+
+
+; Podobně jako ke speciální formě "if" existuje varianta "if-let", je k makru "when" vytvořena jeho obdoba nazvaná "when-let" (což je opět makro):
 (doc when-let)
 ;; -------------------------
 ;; clojure.core/when-let
@@ -346,27 +428,28 @@
 ;;  When test is true, evaluates body with binding-form bound to the value of test
 
 ; Opět se podívejme na příklad použití tohoto makra. Konkrétně se bude jednat o
-; přepis následujícího skriptu:
+; přepis následujícího skriptu (nepatrně upravený skript z předchozích
+; kapitol):
 (let [name (read-line)]
   (when (not-empty name)
     (print "Hello! ")
     (println name)
     name)) ; návratová hodnota
 
-; Na jeho kratší variantu:
+; Na jeho kratší variantu postavené právě na makru "when-let":
 (when-let [name (not-empty (read-line))]
   (print "Hello! ")
   (println name)
   name) ; návratová hodnota
 
-; Expanze tohoto makra:
+; Expanze tohoto makra ukáže, že se v expandovaném kódu používá makro "when":
 (macroexpand-1
   '(when-let [name (not-empty (read-line))]
     (print "Hello! ")
     (println name)
     name))
 
-; Nyní již expanze není příliš přímočará:
+; Nyní již expanze není příliš přímočará z důvodu použití generovaných proměnných:
 ;; (clojure.core/let
 ;;  [temp__5735__auto__ (not-empty (read-line))]
 ;;  (clojure.core/when
@@ -376,6 +459,107 @@
 ;;    (print "Hello! ")
 ;;    (println name)
 ;;    name)))
+
+; varianta s "if-some" a "when-some" (viz další blok)
+(if-some [x (not-empty (read-line))]
+  (str "Hello! " x)
+  :nic)
+
+(macroexpand
+  '(if-some [x (not-empty (read-line))]
+    (str "Hello! " x)
+    :nic))
+
+(when-some [name (not-empty (read-line))]
+  (print "Hello! ")
+  (println name)
+  name) ; návratová hodnota
+
+(macroexpand
+  '(when-some [name (not-empty (read-line))]
+    (print "Hello! ")
+    (println name)
+    name)) ; návratová hodnota
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Makra "if-some" a "when-some"
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Krátce se zmiňme o makrech "if-some" a "when-some". Jedná se o obdobu již
+; výše popsaných maker "if-let" a "when-let", ovšem s jednou podstatnou
+; výjimkou: makra "if-some" a "when-some" testují, zda je přiřazovaná hodnota
+; rovna "nil" či nikoli zatímco makra "if-let" a "when-let" rozlišují mezi
+; pravdivými a nepravdivými hodnotami. V Clojure jsou přitom prakticky všechny
+; hodnoty považovány za pravdivé (a to včetně nuly či prázdného řetězce),
+; jedinou výjimkou jsou hodnoty "false" a "nil", které jsou považovány za
+; nepravdu.  Rozdíl mezi makry "if-some"/"when-some" a "if-let"/"when-let" si
+; ukážeme na poněkud umělém příkladu (umělém z toho důvodu, že prakticky nikdy
+; není nutné rozlišovat mezi "false" a "nil", což jsou jediné hodnoty, v nichž
+; se funkce maker odlišuje):
+
+(doc if-some)
+; -------------------------
+; clojure.core/if-some
+; ([bindings then] [bindings then else & oldform])
+; Macro
+;   bindings => binding-form test
+; 
+;    If test is not nil, evaluates then with binding-form bound to the
+;    value of test, if not, yields else
+; nil
+
+(doc when-some)
+; -------------------------
+; clojure.core/when-some
+; ([bindings & body])
+; Macro
+;   bindings => binding-form test
+; 
+;    When test is not nil, evaluates body with binding-form bound to the
+;    value of test
+; nil
+
+; Zadefinujeme dva vektory a budeme zkoumat, zda jsou všechny jejich prvky
+; kladné či nikoli:
+(def values1 [-2 -1 0 1 2])
+(def values2 [1 2 3])
+
+; Použití makra "if-let" pro vektor, v němž se nachází nula i záporné prvky:
+(if-let [x (every? pos? values1)]
+  (println "Found")
+  (println "Not found"))
+; Not found
+; nil
+
+; Použití makra "if-let" pro vektor, v němž se nachází jen kladné prvky:
+(if-let [x (every? pos? values2)]
+  (println "Found")
+  (println "Not found"))
+; Found
+; nil
+
+; Použití makra "if-some" pro vektor, v němž se nachází nula i záporné prvky:
+(if-some [x (every? pos? values1)]
+  (println "Found")
+  (println "Not found"))
+; Found
+; nil
+
+; Poznámka: právě zde se "if-some" chová jinak než "if-let", a to z toho
+; důvodu, že "false" není rovno "nil".
+
+; Použití makra "if-some" pro vektor, v němž se nachází jen kladné prvky:
+(if-some [x (every? pos? values2)]
+  (println "Found")
+  (println "Not found"))
+; Found
+; nil
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Použití maker "and" a "or" pro řízení toku programu
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; V některých programovacích jazycích je zvykem nahrazovat některé rozhodovací
 ; konstrukce (resp. přesněji řečeno podmínky) s využitím Booleovských operátorů
@@ -416,17 +600,160 @@
       (and (< x 0) -1)
       0))
 
-; Alternativní zápis s predikáty:
-(defn sgn
+; Otestování funkcionality takto definované funkce:
+(doseq [value [-100 -1 0 1 100]]
+        (println (sgn value)))
+
+; S výsledky:
+;; -1
+;; -1
+;; 0
+;; 1
+;; 1
+
+; Alternativní zápis s predikáty namísto porovnání hodnoty "x" s nulou:
+(defn sgn-2
   [x]
   (or (and (pos? x) +1)
       (and (neg? x) -1)
       0))
 
-; Otestování funkcionality:
-(println (sgn -100))
-(println (sgn 0))
-(println (sgn 100))
+; Opětovné otestování funkcionality takto upravené funkce:
+(doseq [value [-100 -1 0 1 100]]
+        (println (sgn-2 value)))
+
+; Se shodnými výsledky, jako tomu bylo v předchozím příkladu:
+;; -1
+;; -1
+;; 0
+;; 1
+;; 1
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Rozhodovací konstrukce založená na makru "cond"
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Všechny rozhodovací konstrukce popsané v předchozích kapitolách prováděly
+; rozvětvení toku programu na základě vyhodnocení jediné podmínky. Ovšem v
+; praxi se velmi často setkáme s nutností rozhodovat se na základě většího
+; množství podmínek popř. na základě většího množství hodnot (a obecně pak na
+; základě pattern matchingu, což si ukážeme příště). Pokud je nutné provést
+; rozhodnutí na základě více podmínek, nabízí se využití makra nazvaného
+; "cond", které se mj. objevilo (i když jinak zapisované) už v prvních verzích
+; LISPu:
+
+(doc cond)
+-------------------------
+;; clojure.core/cond
+;; ([& clauses])
+;; Macro
+;;   Takes a set of test/expr pairs. It evaluates each test one at a
+;;   time.  If a test returns logical true, cond evaluates and returns
+;;   the value of the corresponding expr and doesn't evaluate any of the
+;;  other tests or exprs. (cond) returns nil.
+;; nil
+
+; Poznámka: v programovacím jazyce Clojure je "cond" realizováno formou makra,
+; zatímco v některých implementacích Scheme se jedná o speciální formu. Jediný
+; podstatný rozdíl je, že v Clojure si můžeme zobrazit expanzi tohoto makra
+; (což si ostatně ukážeme).
+
+(defn sgn-3
+  [x]
+  (cond (pos? x) 1
+        (neg? x) -1
+        true 0))
+
+; Otestování funkcionality takto upravené funkce:
+(doseq [value [-100 -1 0 1 100]]
+        (println (sgn-3 value)))
+
+(defn sgn-4
+  [x]
+  (cond (pos? x)  1
+        (neg? x) -1
+        :else     0))
+
+(defn sgn-5
+  [x]
+  (cond (pos? x)  1
+        (neg? x) -1
+        :default  0))
+
+; Opětovné otestování funkcionality takto upravené funkce:
+(doseq [value [-100 -1 0 1 100]]
+        (println (sgn-4 value)))
+
+(macroexpand
+  '(cond (pos? x)  1
+         (neg? x) -1
+         :else     0))
+;; (if (pos? x) 1 (clojure.core/cond (neg? x) -1 :else 0))
+
+(use 'clojure.walk)
+
+(macroexpand-all
+  '(cond (pos? x)  1
+         (neg? x) -1
+         :else     0))
+;; (if (pos? x) 1 (if (neg? x) -1 (if :else 0 nil)))
+
+(let [grade 85]
+  (cond
+    (>= grade 90) "A"
+    (>= grade 80) "B"
+    (>= grade 70) "C"
+    (>= grade 60) "D"
+    :else         "F"))
+
+(macroexpand
+  '(cond
+    (>= grade 90) "A"
+    (>= grade 80) "B"
+    (>= grade 70) "C"
+    (>= grade 60) "D"
+    :else "F"))
+
+;; (if
+;;  (>= grade 90)
+;;  "A"
+;;  (clojure.core/cond
+;;   (>= grade 80)
+;;   "B"
+;;   (>= grade 70)
+;;   "C"
+;;   (>= grade 60)
+;;   "D"
+;;   :else
+;;   "F"))
+
+(macroexpand-all
+  '(cond
+    (>= grade 90) "A"
+    (>= grade 80) "B"
+    (>= grade 70) "C"
+    (>= grade 60) "D"
+    :else "F"))
+;; (if
+;;  (>= grade 90)
+;;  "A"
+;;  (if
+;;   (>= grade 80)
+;;   "B"
+;;   (if (>= grade 70) "C" (if (>= grade 60) "D" (if :else "F" nil)))))
+
+
+(defn gcd-2
+  [x y]
+  (cond
+    (= x y) x
+    (> x y) (gcd-2 (- x y) y)
+    :else   (gcd-2 x (- y x))))
+
+(println (gcd-2 64 24))
+
+(println (gcd-2 123456 6543216))
 
 ; Na závěr se ještě zmiňme o speciálních formách programovacího jazyka Clojure.
 ; V tomto článku jsme se setkali se čtyřmi speciálními formami (jsou uvedeny na
