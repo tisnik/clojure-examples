@@ -17,6 +17,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/core.async "0.2.374"]]
+  :plugins [[lein-codox "0.10.7"]]
   :main ^:skip-aot async11.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
