@@ -1398,6 +1398,292 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;; Expanze makra cond->>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; Způsob expanze makra cond->> si ukážeme na příklad převodníku hodnoty typu řetězec, číslo s plovoucí řádovou čárkou, zlomek či celé číslo na hodnotu typu integer (tedy celé číslo):
+
+(macroexpand
+  '(cond->> x 
+    (string? x)   Integer.
+    (float?  x)   int
+    (rational? x) int
+    (integer? x)  identity))
+
+; Výsledek expanze by měl vypadat následovně:
+;; (let*
+;;   [G__10237 x
+;;    G__10237 (if (string? x) (clojure.core/->> G__10237 Integer.) G__10237)
+;;    G__10237 (if (float? x) (clojure.core/->> G__10237 int) G__10237)
+;;    G__10237 (if (rational? x) (clojure.core/->> G__10237 int) G__10237)]
+;;   (if (integer? x) (clojure.core/->> G__10237 identity) G__10237))
+
+; Poznámka: povšimněte si, že se skutečně jednotlivá přiřazení provádí bez ohledu na to, zda byl předchozí test úspěšný nebo neúspěšný. To je největší rozdíl maker cond-> a cond->> oproti makru cond.
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Jedno z nejsložitějších maker ze standardní knihovny: case
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Nejsložitější makro ze standardní knihovny, které si dnes popíšeme, se jmenuje case:
+
+(doc case)
+;; -------------------------
+;; clojure.core/case
+;; ([e & clauses])
+;; Macro
+;;   Takes an expression, and a set of clauses.
+;; 
+;;   Each clause can take the form of either:
+;; 
+;;   test-constant result-expr
+;; 
+;;   (test-constant1 ... test-constantN)  result-expr
+;; 
+;;   The test-constants are not evaluated. They must be compile-time
+;;   literals, and need not be quoted.  If the expression is equal to a
+;;   test-constant, the corresponding result-expr is returned. A single
+;;   default expression can follow the clauses, and its value will be
+;;   returned if no clause matches. If no default expression is provided
+;;   and no clause matches, an IllegalArgumentException is thrown.
+;; 
+;;   Unlike cond and condp, case does a constant-time dispatch, the
+;;   clauses are not considered sequentially.  All manner of constant
+;;   expressions are acceptable in case, including numbers, strings,
+;;   symbols, keywords, and (Clojure) composites thereof. Note that since
+;;   lists are used to group multiple constants that map to the same
+;;   expression, a vector can be used to match a list if needed. The
+;;   test-constants need not be all of the same type.
+
+; Toto makro se do značné míry podobá céčkové či javovské konstrukci switch, protože výsledek zadaného výrazu je porovnáván s konstantami zapsanými před jednotlivými větvemi. To sice není tak obecné řešení, jako je tomu v případě maker cond a condp, ovšem výsledkem by měl být rychlejší běh, protože se interně zkonstruuje mapa s jednotlivými větvemi a výběr větve je tak proveden v téměř konstantním čase a nikoli postupným porovnáváním.
+
+; Poznámka: v předchozím odstavci bylo napsáno "téměř konstantní čas". Zcela přesně se jedná o časovou složitost O(log32N), což je ovšem pro malé N (což se dá u konstrukce case předpokládat) skutečně prakticky konstantní čas.
+
+; Podívejme se nyní na jednotlivé způsoby použití makra case pro vytvoření rozhodovací konstrukce.
+
+(defn say-number
+  [x]
+  (case x
+    0 "nula"
+    1 "jedna"
+    2 "dva"))
+
+(println (say-number 0))
+; nula
+(println (say-number 1))
+; jedna
+(println (say-number 2))
+; dva
+
+(println (say-number 3))
+Execution error (IllegalArgumentException) at user/say-number (REPL:3).
+No matching clause: 3
+
+(defn say-number
+  [x]
+  (case x
+    0 "nula"
+    1 "jedna"
+    2 "dva"
+      "nezname cislo"))
+
+; Otestování funkce say-number:
+(println (say-number 0))
+; nula
+(println (say-number 1))
+; jedna
+(println (say-number 2))
+; dva
+(println (say-number 3))
+; nezname cislo
+
+; Nejsme ovšem omezeni pouze na celočíselné konstanty
+(defn string->number
+  [x]
+  (case x
+    "nula"  0
+    "jedna" 1
+    "dva"   2
+            -1))
+
+; Otestování funkce string->number:
+(println (string->number "nula"))
+; 0
+(println (string->number "jedna"))
+; 1
+(println (string->number "milion"))
+-1
+
+; Jednu větev je možné provést pro více konstant, které musí být umístěny do závorek:
+
+(defn string->number
+  [x]
+  (case x
+    ("nic" "nula")  0
+    "jedna"         1
+    ("dva" "dve")   2
+                   -1))
+
+(println (string->number "nula"))
+; 0
+(println (string->number "dva"))
+; 2
+(println (string->number "dve"))
+; 2
+
+; Konstantami mohou být v případě potřeby i vektory atd.
+(defn say-vector
+  [x]
+  (case x
+    []    "Empty vector"
+    [1]   "Vector with just one item"
+    [1 2] "Sequence of two numbers 1 and 2"
+          "I don't know"))
+
+(say-vector [])
+; "Empty vector"
+
+
+(say-vector [1 2])
+; "Sequence of two numbers 1 and 2"
+
+; Poznámka: pokud je možné namísto testů použít konstanty, je vždy výhodnější v kódu makro case a nikoli condp či dokonce cond.
+
+; Makro cond je sice nejuniverzálnější, ale taktéž delší na zápis a i výpočetně složité:
+(cond
+  (= x 0) "Nula"
+  (= x 1) "Jedna"
+  (= x 2) "Dva"
+  :else   "Nevim")
+
+; Makro condp umožňuje kratší zápis podmínky na jediném místě:
+(condp = x
+  0 "Nula"
+  1 "Jedna"
+  2 "Dva"
+    "Nevim")
+
+; Nejméně univerzální je case, ovšem na druhou stranu je nejrychlejší:
+(case x
+  0 "Nula"
+  1 "Jedna"
+  2 "Dva"
+    "Nevim")
+
+; Rychlejší rozeskoky v případě použití makra case by mělo být možné i naměřit, pochopitelně ovšem za předpokladu, že důvěřujete mikrobenchmarkům:
+
+(defn f1
+  [x]
+  (cond
+    (= x 0) "Nula"
+    (= x 1) "Jedna"
+    (= x 2) "Dva"
+    :else   "Nevim"))
+
+(defn f2
+  [x]
+  (condp = x
+    0 "Nula"
+    1 "Jedna"
+    2 "Dva"
+    "Nevim"))
+
+(defn f3
+  [x]
+  (case x
+    0 "Nula"
+    1 "Jedna"
+    2 "Dva"
+    "Nevim"))
+
+(time (doseq [_ (range 100000000)]
+        (doseq [x (range 0 4)]
+          (f1 x))))
+; "Elapsed time: 4252.930607 msecs"
+
+(time (doseq [_ (range 100000000)]
+        (doseq [x (range 0 4)]
+          (f2 x))))
+; "Elapsed time: 4417.662463 msecs"
+
+(time (doseq [_ (range 100000000)]
+        (doseq [x (range 0 4)]
+          (f3 x))))
+; "Elapsed time: 3924.937731 msecs"
+
+; Poznámka: na druhou stranu je nutné poznamenat, že u jazyka typu Clojure (dynamicky typovaný vysokoúrovňový jazyk běžící nad JVM) je většinou mnohem důležitější sémantika zapisovaných operací (tj. i zde má makro case význam) nad ušetřeným strojovým časem.
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Expanze makra case a forma vygenerovaného bajtkódu
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; V krátkosti se ještě zmiňme o expanzi makra case. Ta se v jednom ohledu odlišuje od expanze ostatních maker, a to konkrétně v tom ohledu, že výsledkem expanze není kód založený na speciální formě if. Namísto toho se v expanzi setkáme s case*, což je metoda implementovaná v Javě, která slouží ke konstrukci rozeskoku na úrovni bajtkódu. Ostatně se o tom můžeme velmi snadno přesvědčit:
+(macroexpand
+  '(case x
+    0 "Nula"
+    1 "Jedna"
+    2 "Dva"
+      "Nevim"))
+;; (let*
+;;  [G__11190 x]
+;;  (case*
+;;   G__11190
+;;   0
+;;   0
+;;   "Nevim"
+;;   {0 [0 "Nula"] 1 [1 "Jedna"] 2 [2 "Dva"]}
+;;   :compact
+;;   :int))
+
+; Abychom pochopili, jak celá technologie pracuje, musíme si připomenout, že Clojure pracuje tak, že každou zapsanou formu přeloží (po expanzi maker) do bajtkódu JVM a teprve poté je tato forma spuštěna. A právě pro překlad do bajtkódu se interně používá třída Compiler, která konkrétně interní symbol case* přeloží s využitím instrukce tableswitch určené pro implementaci konstrukce switch z Javy (resp. přesněji switch v případě, že jsou použita celá čísla nebo výčtový typ, nikoli řetězce). V praxi vypadá překlad funkce f3:
+
+(defn f3
+  [x]
+  (case x
+    0 "Nula"
+    1 "Jedna"
+    2 "Dva"
+    "Nevim"))
+
+; následovně:
+
+;; public static java.lang.Object invokeStatic(java.lang.Object x);
+;;    0  aload_0 [x]
+;;    1  aconst_null
+;;    2  astore_0 [x]
+;;    3  astore_1 [G__5991]
+;;    4  aload_1 [G__5991]
+;;    5  instanceof java.lang.Number [13]
+;;    8  ifeq 89
+;;   11  aload_1 [G__5991]
+;;   12  checkcast java.lang.Number [13]
+;;   15  invokevirtual java.lang.Number.intValue() : int [17]
+;;   18  tableswitch default: 89
+;;         case 0: 44
+;;         case 1: 59
+;;         case 2: 74
+;;   44  aload_1 [G__5991]
+;;   45  getstatic user$f3.const__0 : java.lang.Object [21]
+;;   48  invokestatic clojure.lang.Util.equiv(java.lang.Object, java.lang.Object) : boolean [27]
+;;   51  ifeq 89
+;;   54  ldc <String "Nula"> [29]
+;;   56  goto 91
+;;   59  aload_1 [G__5991]
+;;   60  getstatic user$f3.const__1 : java.lang.Object [32]
+;;   63  invokestatic clojure.lang.Util.equiv(java.lang.Object, java.lang.Object) : boolean [27]
+;;   66  ifeq 89
+;;   69  ldc <String "Jedna"> [34]
+;;   71  goto 91
+;;   74  aload_1 [G__5991]
+;;   75  getstatic user$f3.const__2 : java.lang.Object [37]
+;;   78  invokestatic clojure.lang.Util.equiv(java.lang.Object, java.lang.Object) : boolean [27]
+;;   81  ifeq 89
+;;   84  ldc <String "Dva"> [39]
+;;   86  goto 91
+;;   89  ldc <String "Nevim"> [41]
+;;   91  areturn
+
+; Poznámka: https://github.com/gtrak/no.disassemble
 
 
 
@@ -1405,8 +1691,11 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;; Makra ze jmenného prostoru clojure.core.logic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; V této kapitole si ve stručnosti popíšeme některá makra, která jsou definována ve jmenném prostoru clojure.core.logic. V tomto jmenném prostoru nalezneme knihovnu, která do programovacího jazyka Clojure přináší konstrukce známé z Prologu, které byly popsány například v The Reasoned Schemer (The Reasoned Schemer, Second Edition: https://mitpress.mit.edu/books/reasoned-schemer-second-edition). Načtení funkcí, maker a dalších symbolů z tohoto jmenného prostoru si musíme explicitně vyžádat, například použitím require či use:
+
 (use 'clojure.core.logic)
 
+; V tomto jmenném prostoru nalezneme  
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
