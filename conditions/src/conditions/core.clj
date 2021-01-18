@@ -10,33 +10,35 @@
 ; | #  | Konstrukce  | Typ                                 | Stručný popis                                                                               |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
 ; |  1 | if          | speciální forma                     | základní rozhodovací konstrukce, základ pro další makra                                     |
-; |  2 | if+do       | dvě speciální formy                 | použito ve chvíli, kdy je nutné do jedné větve či obou větví zapsat více výrazů             |
-; |  3 | if-let      | makro                               | kombinace speciálních forem "if" a "let"                                                    |
-; |  4 | if-some     | makro                               | kombinace speciálních forem "if" a "let" (test na hodnotu "nil")                            |
+; |  2 | if-not      | makro                               | stejné jako speciální forma if, ovšem s negovanou podmínkou                                 |
+; |  3 | if+do       | dvě speciální formy                 | použito ve chvíli, kdy je nutné do jedné větve či obou větví zapsat více výrazů             |
+; |  4 | if-let      | makro                               | kombinace speciálních forem "if" a "let"                                                    |
+; |  5 | if-some     | makro                               | kombinace speciálních forem "if" a "let" (test na hodnotu "nil")                            |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
-; |  5 | and         | makro                               | postupné vyhodnocování předaných výrazů až do chvíle, kdy se vrátí nil či false             |
-; |  6 | or          | makro                               | postupné vyhodnocování předaných výrazů až do chvíle, kdy se vrátí true                     |
+; |  6 | and         | makro                               | postupné vyhodnocování předaných výrazů až do chvíle, kdy se vrátí nil či false             |
+; |  7 | or          | makro                               | postupné vyhodnocování předaných výrazů až do chvíle, kdy se vrátí true                     |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
-; |  7 | when        | makro                               | vhodná náhrada za "if" s jedinou větví s více výrazy                                        |
-; |  8 | when-not    | makro                               | vhodná náhrada za "if-not" s jedinou větví s více výrazy                                    |
-; |  9 | when-let    | makro                               | kombinace speciálních forem "when" a "let"                                                  |
-; | 10 | when-some   | makro                               | kombinace speciálních forem "when" (test na hodnotu "nil") a "let"                          |
-; | 11 | when-first  | makro                               |
+; |  8 | when        | makro                               | vhodná náhrada za "if" s jedinou větví s více výrazy                                        |
+; |  9 | when-not    | makro                               | vhodná náhrada za "if-not" s jedinou větví s více výrazy                                    |
+; | 10 | when-let    | makro                               | kombinace speciálních forem "when" a "let"                                                  |
+; | 11 | when-some   | makro                               | kombinace speciálních forem "when" (test na hodnotu "nil") a "let"                          |
+; | 12 | when-first  | makro                               | použito při testu prvního prvku sekvence s následným zpracováním sekvence                   |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
-; | 12 | cond        | makro                               | postupné testování podmínek, pokud je podmínka splněna, vrátí se hodnota příslušného výrazu |
-; | 13 | cond + else | makro                               | typické použití makra cond s větví :else nebo :default                                      |
-; | 14 | condp       | makro                               |
-; | 15 | conde       | makro z knihovny clojure.core.logic |
-; | 16 | condu       | makro z knihovny clojure.core.logic |
-; | 17 | conda       | makro z knihovny clojure.core.logic |
+; | 13 | cond        | makro                               | postupné testování podmínek, pokud je podmínka splněna, vrátí se hodnota příslušného výrazu |
+; | 14 | cond + else | makro                               | typické použití makra cond s větví :else nebo :default                                      |
+; | 15 | condp       | makro                               | postupné dosazování testované hodnoty do zadaného výrazu, obdoba switch-case                |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
-; | 18 | cond->      | makro                               |
-; | 19 | cond->>     | makro                               |
+; | 16 | conde       | makro z knihovny clojure.core.logic |  makro z knihovny clojure.core.logic (logické programování)                                 |
+; | 17 | condu       | makro z knihovny clojure.core.logic |  makro z knihovny clojure.core.logic (logické programování)                                 |
+; | 18 | conda       | makro z knihovny clojure.core.logic |  makro z knihovny clojure.core.logic (logické programování)                                 |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
-; | 20 | case        | makro                               |
-; | 21 | case + else | makro                               |
+; | 19 | cond->      | makro                               | odvozeno od cond a threading makra ->                                                       |
+; | 20 | cond->>     | makro                               | odvozeno od cond a threading makra ->                                                       |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
-; | 22 | cond-table  | makro (prozatím bez knihovny)       | nová nestandardní konstrukce se zdrojovým kódem zmíněným na konci druhého článku            |
+; | 21 | case        | makro                               | rozeskok na základě porovnání hodnoty výrazu s konstantami                                  |
+; | 22 | case + else | makro                               | rozeskok na základě porovnání hodnoty výrazu s konstantami a větví typu "else"              |
+; --------------------------------------------------------------------------------------------------------------------------------------------------------
+; | 23 | cond-table  | makro (prozatím bez knihovny)       | nová nestandardní konstrukce se zdrojovým kódem zmíněným na konci druhého článku            |
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1099,7 +1101,8 @@
 ;; Makro cond->
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; První makro s nímž se dnes setkáme a které nám umožňuje zapsat rozvětvení na základě vyhodnocovaných podmínek, se jmenuje cond->:
+; První makro s nímž se dnes setkáme a které nám umožňuje zapsat rozvětvení na
+; základě vyhodnocovaných podmínek, se jmenuje cond->:
 
 (doc cond->)
 -------------------------
@@ -1111,7 +1114,10 @@ clojure.core/cond->
 ;;   expression is true. Note that, unlike cond branching, cond-> threading does
 ;;   not short circuit after the first true test expression.
 
-Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se bude jednat o konstrukci, která je založena na takzvaném threading makru. Samotné threading makro je přitom jednou z nejelegantnějších konstrukcí programovacího jazyka Clojure vůbec:
+; Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se bude
+; jednat o konstrukci, která je založena na takzvaném threading makru. Samotné
+; threading makro je přitom jednou z nejelegantnějších konstrukcí
+; programovacího jazyka Clojure vůbec:
 
 (doc ->)
 ;; -------------------------
@@ -1123,7 +1129,9 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;;   list already. If there are more forms, inserts the first form as the
 ;;   second item in second form, etc.
 
-; Toto makro nám umožňuje zapisovat sérii funkcí, mezi nimiž se předávají parametry podobně, jako je tomu v klasické koloně. Samotný zápis je přitom velmi stručný a obejde se bez řady závorek:
+; Toto makro nám umožňuje zapisovat sérii funkcí, mezi nimiž se předávají
+; parametry podobně, jako je tomu v klasické koloně. Samotný zápis je přitom
+; velmi stručný a obejde se bez řady závorek:
 
 (-> 1
     inc
@@ -1150,7 +1158,8 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
     println)
 ; HELLO
 
-; Expanze tohoto makra vede k zápisu s velkým množstvím závorek tak typickým pro klasické LISPovské jazyky bez tohoto makra:
+; Expanze tohoto makra vede k zápisu s velkým množstvím závorek tak typickým
+; pro klasické LISPovské jazyky bez tohoto makra:
 (macroexpand
   '(-> "Hello world."
       .toUpperCase
@@ -1162,15 +1171,23 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ; S výsledkem:
 ; (println (first (.split (.replace (.toUpperCase "Hello world.") "." "!") " ")))
 
-; Vraťme se však k makru cond->, které je odvozené od makra cond. Jeho činnost je následující: postupně jsou testovány jednotlivé podmínky (sudé parametry) a pokud je podmínka splněna, je do výrazu za ní (liché parametry) dosazen první parametr makra, podobně jako je tomu u výše zmíněného threading makra.
+; Vraťme se však k makru cond->, které je odvozené od makra cond. Jeho činnost
+; je následující: postupně jsou testovány jednotlivé podmínky (sudé parametry)
+; a pokud je podmínka splněna, je do výrazu za ní (liché parametry) dosazen
+; první parametr makra, podobně jako je tomu u výše zmíněného threading makra.
 
-; V následujícím úryvku kódu se pokoušíme převést obsah řetězce na číselnou hodnotu, ovšem s testem, zda je vstupní hodnota skutečně řetězcem. S využitím makra cond-> se samotné x (tedy reference na převáděnou hodnotu) nemusí opakovat v podmínce i v převodní funkci:
+; V následujícím úryvku kódu se pokoušíme převést obsah řetězce na číselnou
+; hodnotu, ovšem s testem, zda je vstupní hodnota skutečně řetězcem. S využitím
+; makra cond-> se samotné x (tedy reference na převáděnou hodnotu) nemusí
+; opakovat v podmínce i v převodní funkci:
 (let [x "42"] 
   (cond-> x 
     (string? x) (Integer.)))
 ; 42
 
-; Poněkud umělý příklad, který je na makru cond-> postaven, může testovat hodnotu parametru x a následně na základě hodnoty tohoto parametru provádí operace (inc x), (/ x 2) a (dec x):
+; Poněkud umělý příklad, který je na makru cond-> postaven, může testovat
+; hodnotu parametru x a následně na základě hodnoty tohoto parametru provádí
+; operace (inc x), (/ x 2) a (dec x):
 (defn machina
   [x]
   (cond-> x 
@@ -1201,7 +1218,11 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;; Vyhodnocování všech větví makrem cond->
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Na rozdíl od makra cond, které při splnění podmínky již další podmínky netestuje, je tomu u makra cond-> jinak, protože se postupně prochází všechny podmínky. To může vést k chybám, zejména tehdy, pokud se použije větev :else (symbol :else se vždy vyhodnotí na pravdu). Pokud tedy předchozí příklad nepatrně upravíme:
+; Na rozdíl od makra cond, které při splnění podmínky již další podmínky
+; netestuje, je tomu u makra cond-> jinak, protože se postupně prochází všechny
+; podmínky. To může vést k chybám, zejména tehdy, pokud se použije větev :else
+; (symbol :else se vždy vyhodnotí na pravdu). Pokud tedy předchozí příklad
+; nepatrně upravíme:
 (defn machina-2
   [x]
   (cond-> x 
@@ -1226,7 +1247,8 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ; 9 10 9
 ; 10 5 4
 
-; Ještě lépe je toto chování patrné v případě, že se v jednotlivých větvích nachází funkce s vedlejším efektem, zde konkrétně funkce println:
+; Ještě lépe je toto chování patrné v případě, že se v jednotlivých větvích
+; nachází funkce s vedlejším efektem, zde konkrétně funkce println:
 (defn machina-3
   [x]
   (cond-> x 
@@ -1285,27 +1307,31 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;; 10 even
 ;; nil zero
 
-; Poznámka: funkce println v tomto případě ve skutečnosti vypíše i hodnotu parametru x, který je do println dosazen makrem cond->.
+; Poznámka: funkce println v tomto případě ve skutečnosti vypíše i hodnotu
+; parametru x, který je do println dosazen makrem cond->.
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Expanze makra cond->
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Otestovat si můžeme i expanzi makra cond->. Pro výpis expandovaného makra opět použijeme známou funkci macroexpand:
+; Otestovat si můžeme i expanzi makra cond->. Pro výpis expandovaného makra
+; opět použijeme známou funkci macroexpand:
 (macroexpand
   '(cond-> x 
      (odd? x)  inc
      (even? x) (/ 2)
      (zero? x) inc))
 
-; Výsledkem by měl být tento kód (pomocná proměnná může mít ovšem odlišné jméno):
+; Výsledkem by měl být tento kód (pomocná proměnná může mít ovšem odlišné
+; jméno):
 ;; (let* [G__10086 x
 ;;        G__10086 (if (odd? x)  (clojure.core/-> G__10086 inc) G__10086)
 ;;        G__10086 (if (even? x) (clojure.core/-> G__10086 (/ 2)) G__10086)]
 ;;   (if (zero? x) (clojure.core/-> G__10086 inc) G__10086))
 
-; Poznámka: povšimněte si, že se skutečně postupně vyhodnocují všechny větve a současně se interně používá threading makro ->.
+; Poznámka: povšimněte si, že se skutečně postupně vyhodnocují všechny větve a
+; současně se interně používá threading makro ->.
 
 ; Příklad expanze ne plně funkčního kódu s větví else:
 (macroexpand
@@ -1324,7 +1350,8 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;; Makro cond->>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Druhé makro určené pro implementaci rozvětvení na základě zadaných podmínek se jmenuje cond->>:
+; Druhé makro určené pro implementaci rozvětvení na základě zadaných podmínek
+; se jmenuje cond->>:
 (doc cond->>)
 ;; -------------------------
 ;; clojure.core/cond->>
@@ -1335,7 +1362,8 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;;   is true.  Note that, unlike cond branching, cond->> threading does not short circuit
 ;;   after the first true test expression.
 
-; Opět se jedná o variantu makra cond, tentokrát ovšem zkombinovanou s alternativní formou threading makra ->>:
+; Opět se jedná o variantu makra cond, tentokrát ovšem zkombinovanou s
+; alternativní formou threading makra ->>:
 (doc ->>)
 ;; -------------------------
 ;; clojure.core/->>
@@ -1346,7 +1374,10 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;;   list already. If there are more forms, inserts the first form as the
 ;;   last item in second form, etc.
 
-; Na rozdíl od výše popsaného makra cond-> se liší dosazování parametru do jednotlivých větví - parametr je dosazen na poslední místo výrazu (což je typicky volání nějaké funkce) a nikoli na místo první. Pokud tedy například použijeme tuto funkci:
+; Na rozdíl od výše popsaného makra cond-> se liší dosazování parametru do
+; jednotlivých větví - parametr je dosazen na poslední místo výrazu (což je
+; typicky volání nějaké funkce) a nikoli na místo první. Pokud tedy například
+; použijeme tuto funkci:
 
 (defn machina-3
   [x]
@@ -1398,7 +1429,9 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;; Expanze makra cond->>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Způsob expanze makra cond->> si ukážeme na příklad převodníku hodnoty typu řetězec, číslo s plovoucí řádovou čárkou, zlomek či celé číslo na hodnotu typu integer (tedy celé číslo):
+; Způsob expanze makra cond->> si ukážeme na příklad převodníku hodnoty typu
+; řetězec, číslo s plovoucí řádovou čárkou, zlomek či celé číslo na hodnotu
+; typu integer (tedy celé číslo):
 
 (macroexpand
   '(cond->> x 
@@ -1415,7 +1448,9 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;;    G__10237 (if (rational? x) (clojure.core/->> G__10237 int) G__10237)]
 ;;   (if (integer? x) (clojure.core/->> G__10237 identity) G__10237))
 
-; Poznámka: povšimněte si, že se skutečně jednotlivá přiřazení provádí bez ohledu na to, zda byl předchozí test úspěšný nebo neúspěšný. To je největší rozdíl maker cond-> a cond->> oproti makru cond.
+; Poznámka: povšimněte si, že se skutečně jednotlivá přiřazení provádí bez
+; ohledu na to, zda byl předchozí test úspěšný nebo neúspěšný. To je největší
+; rozdíl maker cond-> a cond->> oproti makru cond.
 
 
 
@@ -1423,7 +1458,8 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;; Jedno z nejsložitějších maker ze standardní knihovny: case
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Nejsložitější makro ze standardní knihovny, které si dnes popíšeme, se jmenuje case:
+; Nejsložitější makro ze standardní knihovny, které si dnes popíšeme, se
+; jmenuje case:
 
 (doc case)
 ;; -------------------------
@@ -1453,11 +1489,19 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 ;;   expression, a vector can be used to match a list if needed. The
 ;;   test-constants need not be all of the same type.
 
-; Toto makro se do značné míry podobá céčkové či javovské konstrukci switch, protože výsledek zadaného výrazu je porovnáván s konstantami zapsanými před jednotlivými větvemi. To sice není tak obecné řešení, jako je tomu v případě maker cond a condp, ovšem výsledkem by měl být rychlejší běh, protože se interně zkonstruuje mapa s jednotlivými větvemi a výběr větve je tak proveden v téměř konstantním čase a nikoli postupným porovnáváním.
+; Toto makro se do značné míry podobá céčkové či javovské konstrukci switch,
+; protože výsledek zadaného výrazu je porovnáván s konstantami zapsanými před
+; jednotlivými větvemi. To sice není tak obecné řešení, jako je tomu v případě
+; maker cond a condp, ovšem výsledkem by měl být rychlejší běh, protože se
+; interně zkonstruuje mapa s jednotlivými větvemi a výběr větve je tak proveden
+; v téměř konstantním čase a nikoli postupným porovnáváním.
 
-; Poznámka: v předchozím odstavci bylo napsáno "téměř konstantní čas". Zcela přesně se jedná o časovou složitost O(log32N), což je ovšem pro malé N (což se dá u konstrukce case předpokládat) skutečně prakticky konstantní čas.
+; Poznámka: v předchozím odstavci bylo napsáno "téměř konstantní čas". Zcela
+; přesně se jedná o časovou složitost O(log32N), což je ovšem pro malé N (což
+; se dá u konstrukce case předpokládat) skutečně prakticky konstantní čas.
 
-; Podívejme se nyní na jednotlivé způsoby použití makra case pro vytvoření rozhodovací konstrukce.
+; Podívejme se nyní na jednotlivé způsoby použití makra case pro vytvoření
+; rozhodovací konstrukce.
 
 (defn say-number
   [x]
@@ -1512,7 +1556,14 @@ No matching clause: 3
 (println (string->number "milion"))
 -1
 
-; Jednu větev je možné provést pro více konstant, které musí být umístěny do závorek:
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Větší množství konstant u jednotlivých větví v makru case
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Jednu větev je možné provést pro více konstant, které musí být umístěny do
+; závorek:
 
 (defn string->number
   [x]
@@ -1545,7 +1596,17 @@ No matching clause: 3
 (say-vector [1 2])
 ; "Sequence of two numbers 1 and 2"
 
-; Poznámka: pokud je možné namísto testů použít konstanty, je vždy výhodnější v kódu makro case a nikoli condp či dokonce cond.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Kdy použít cond, condp a case?
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Nyní již známe celou trojici standardních maker pro rozeskoky – cond, condp a
+; case. Makro cond je nejobecnější, protože každá podmínka může být zadána
+; samostatným výrazem. Ovšem za tuto univerzálnost platíme menší čitelností.
+; Pokud je nutné testy implementovat podobnými výrazy, je výhodnější použít
+; condp a v případě, že se porovnává výsledek nějakého výrazu s konstantami,
+; doporučuje se použít case, viz též Clojure Style Guide.
 
 ; Makro cond je sice nejuniverzálnější, ale taktéž delší na zápis a i výpočetně složité:
 (cond
@@ -1568,7 +1629,8 @@ No matching clause: 3
   2 "Dva"
     "Nevim")
 
-; Rychlejší rozeskoky v případě použití makra case by mělo být možné i naměřit, pochopitelně ovšem za předpokladu, že důvěřujete mikrobenchmarkům:
+; Rychlejší rozeskoky v případě použití makra case by mělo být možné i naměřit,
+; pochopitelně ovšem za předpokladu, že důvěřujete mikrobenchmarkům:
 
 (defn f1
   [x]
@@ -1609,7 +1671,10 @@ No matching clause: 3
           (f3 x))))
 ; "Elapsed time: 3924.937731 msecs"
 
-; Poznámka: na druhou stranu je nutné poznamenat, že u jazyka typu Clojure (dynamicky typovaný vysokoúrovňový jazyk běžící nad JVM) je většinou mnohem důležitější sémantika zapisovaných operací (tj. i zde má makro case význam) nad ušetřeným strojovým časem.
+; Poznámka: na druhou stranu je nutné poznamenat, že u jazyka typu Clojure
+; (dynamicky typovaný vysokoúrovňový jazyk běžící nad JVM) je většinou mnohem
+; důležitější sémantika zapisovaných operací (tj. i zde má makro case význam)
+; nad ušetřeným strojovým časem.
 
 
 
@@ -1617,7 +1682,12 @@ No matching clause: 3
 ;; Expanze makra case a forma vygenerovaného bajtkódu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; V krátkosti se ještě zmiňme o expanzi makra case. Ta se v jednom ohledu odlišuje od expanze ostatních maker, a to konkrétně v tom ohledu, že výsledkem expanze není kód založený na speciální formě if. Namísto toho se v expanzi setkáme s case*, což je metoda implementovaná v Javě, která slouží ke konstrukci rozeskoku na úrovni bajtkódu. Ostatně se o tom můžeme velmi snadno přesvědčit:
+; V krátkosti se ještě zmiňme o expanzi makra case. Ta se v jednom ohledu
+; odlišuje od expanze ostatních maker, a to konkrétně v tom ohledu, že
+; výsledkem expanze není kód založený na speciální formě if. Namísto toho se v
+; expanzi setkáme s case*, což je metoda implementovaná v Javě, která slouží ke
+; konstrukci rozeskoku na úrovni bajtkódu. Ostatně se o tom můžeme velmi snadno
+; přesvědčit:
 (macroexpand
   '(case x
     0 "Nula"
@@ -1635,7 +1705,14 @@ No matching clause: 3
 ;;   :compact
 ;;   :int))
 
-; Abychom pochopili, jak celá technologie pracuje, musíme si připomenout, že Clojure pracuje tak, že každou zapsanou formu přeloží (po expanzi maker) do bajtkódu JVM a teprve poté je tato forma spuštěna. A právě pro překlad do bajtkódu se interně používá třída Compiler, která konkrétně interní symbol case* přeloží s využitím instrukce tableswitch určené pro implementaci konstrukce switch z Javy (resp. přesněji switch v případě, že jsou použita celá čísla nebo výčtový typ, nikoli řetězce). V praxi vypadá překlad funkce f3:
+; Abychom pochopili, jak celá technologie pracuje, musíme si připomenout, že
+; Clojure pracuje tak, že každou zapsanou formu přeloží (po expanzi maker) do
+; bajtkódu JVM a teprve poté je tato forma spuštěna. A právě pro překlad do
+; bajtkódu se interně používá třída Compiler, která konkrétně interní symbol
+; case* přeloží s využitím instrukce tableswitch určené pro implementaci
+; konstrukce switch z Javy (resp. přesněji switch v případě, že jsou použita
+; celá čísla nebo výčtový typ, nikoli řetězce). V praxi vypadá překlad funkce
+; f3:
 
 (defn f3
   [x]
@@ -1683,7 +1760,11 @@ No matching clause: 3
 ;;   89  ldc <String "Nevim"> [41]
 ;;   91  areturn
 
-; Poznámka: https://github.com/gtrak/no.disassemble
+; Poznámka: pro získání bajtkódu lze použít buď nástroj javap dodávaný společně
+; s JVM, nebo – což je jednodušší – knihovnu nazvanou no.disassemble, která je
+; dostupná na adrese https://github.com/gtrak/no.disassemble. Popis této
+; knihovny přesahuje rozsah dnešního článku, ovšem zmíníme se o ní později v
+; samostatném textu.
 
 
 
@@ -1691,16 +1772,76 @@ No matching clause: 3
 ;; Makra ze jmenného prostoru clojure.core.logic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; V této kapitole si ve stručnosti popíšeme některá makra, která jsou definována ve jmenném prostoru clojure.core.logic. V tomto jmenném prostoru nalezneme knihovnu, která do programovacího jazyka Clojure přináší konstrukce známé z Prologu, které byly popsány například v The Reasoned Schemer (The Reasoned Schemer, Second Edition: https://mitpress.mit.edu/books/reasoned-schemer-second-edition). Načtení funkcí, maker a dalších symbolů z tohoto jmenného prostoru si musíme explicitně vyžádat, například použitím require či use:
+; V této kapitole se ve stručnosti zmíníme o makrech, která jsou definována ve
+; jmenném prostoru clojure.core.logic. V tomto jmenném prostoru nalezneme
+; knihovnu, která do programovacího jazyka Clojure přináší konstrukce známé z
+; Prologu, které byly popsány například v The Reasoned Schemer (The Reasoned
+; Schemer, Second Edition:
+; https://mitpress.mit.edu/books/reasoned-schemer-second-edition). Načtení
+; funkcí, maker a dalších symbolů z tohoto jmenného prostoru si musíme
+; explicitně vyžádat, například použitím require či use:
 
 (use 'clojure.core.logic)
 
-; V tomto jmenném prostoru nalezneme  
+; Mezi makra, která se zde používají pro vyhodnocení podmínek, patří condu,
+; conda a conde. Jejich podrobnějším popisem se budeme zabývat v samostatném
+; článku o logickém programování v Clojure.
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Od "jednorozměrných" rozhodovacích konstrukcí ke konstrukcím dvourozměrným
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Existuje poměrně mnoho algoritmů postavených na takzvaných rozhodovacích
+; tabulkách. Tyto tabulky mají podobu skutečných tabulek, v nichž se v
+; hlavičkách sloupců i řádků zapisují podmínky a do buněk tabulky pak vypočtená
+; hodnota popř. akce, která se má provést (tedy volání nějaké funkce). V
+; běžných programovacích jazycích většinou nelze tyto rozhodovací tabulky
+; zapisovat přímo, takže se setkáme buď s využitím map (popř. map obsahujících
+; další mapy), vnořených konstrukcí switch apod. To ovšem není ani přehledné
+; ani to neodpovídá implementovanému algoritmu (rozhodovací tabulka totiž může
+; být součástí zadání). V programovacím jazyku Clojure však díky jeho
+; makrosystému a homoikonicitě existuje minimálně jedno elegantní řešení, a to
+; konkrétně ve formě makra nazvaného příznačně cond-table, jehož autorem je <a
+; href="https://github.com/semperos">Daniel Gregoire</a>. Pokud je například
+; nutné implementovat tabulku, která na základě dvou dvojic predikátů určí,
+; která další funkce se má zavolat:
+
+;; +------------++--------------+------------+
+;; |            || in-progress? | final-run? |
+;; +------------++--------------+------------+
+;; | succeeded? || succeed      | succeed    |
+;; |    failed? || retry        | terminate  |
+;; +------------++--------------+------------+
+
+; Je možné tuto rozhodovací tabulku zapsat do zdrojového kódu zcela přímočarým způsobem:
+
+(cond-table
+  :|             in-progress?   final-run?
+  :| succeeded?  (succeed)      (succeed)
+  :|    failed?  (retry)        (terminate))
+
+; Taktéž někdy můžeme chtít pouze vrátit určitou hodnotu na základě podmínek a nevolat žádné funkce:
+
+;; |              operace=login   operace=logout  operace=index-page
+;; | status=200  :index-page      :logout-page    :index-page
+;; | status=401  :not-authorized  :invalid-state  :invalid-state
+;; | status=404  :not-found       :not-found      :not-found)
+
+; I tuto tabulku lze do zdrojového kódu zapsat přímočaře:
+(cond-table
+    :|                   (= oper :login)   (= oper :logout)  (= oper :index-page)
+    :|   (= status 200)  :index-page       :logout-page      :index-page
+    :|   (= status 401)  :not-authorized   :invalid-state    :invalid-state
+    :|   (= status 404)  :not-found        :not-found        :not-found)
+
+
+
+;; Makro cond-table
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Makro cond-table sice není příliš rozsáhlé, ovšem je strukturováno velmi zajímavě. Nejdříve je (v expandovaném kódu) zkontrolována tabulka zapsaná programátorem a následně se z této tabulky sestaví sekvence forem cond (a ty jsou v další expanzi převedeny na speciální formu if). Úplný zdrojový kód tohoto makra vypadá následovně:
 
 (defmacro cond-table
   [& items]
@@ -1724,6 +1865,8 @@ No matching clause: 3
                 (list (list op left-condition right-condition) expr))
               rights exprs))
            (next rows)))))
+
+; Při expanzi makra se ve výsledném kódu nejdříve provede kontrola (nebo řekněme validace) zapsané tabulky. To zajišťuje pomocná funkce nazvaná příznačně validate-cond-table:
 
 (defn validate-cond-table
   "Validate the arguments passed to the `cond-table` macro and return
@@ -1752,6 +1895,135 @@ No matching clause: 3
             (throw (IllegalArgumentException. "Every row after the first in cond-table must start with a predicate and include an expression for each cell in the table.")))]
     rows))
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Příklady použití makra cond-table
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Celá vyjadřovací síla nabízená makrem cond-table vynikne až ve chvíli, kdy toto makro použijeme v příkladech. Například se můžeme rozhodnout na základě predikátů even? odd? zero? a not-zero? nad tím, jaká hodnota se má vrátit z funkce nazvané choose. Nejdříve ovšem musíme definovat predikát not-zero?
+
+(defn not-zero?
+  [n]
+  (not (zero? n)))
+
+; nebo dáváte-li přednost threading makru:
+
+(defn not-zero?
+  [n]
+  (-> n zero? not))
+
+; Funkce choose s rozhodovací tabulkou bude vypadat následovně:
+
+(defn choose
+  [x]
+  (cond-table
+    :|                 (even? x)   (odd? x)
+    :|      (zero? x)  :a           :b        
+    :|  (not-zero? x)  :c           :d))
+
+; Základní otestování funkčnosti:
+(println (choose 0))
+; a
+(println (choose 1))
+; d
+(println (choose 2))
+; c
+(println (choose 3))
+; d
+(println (choose 4))
+; c
+
+; Poznámka: stav :b pochopitelně nemůže v praxi nastat, ale to bývá u mnoha rozhodovacích tabulek běžné.
+
+; Praktičtější může být funkce v testu webové aplikace, která na základě aktuální operace a stavového kódu vráceného z webové aplikace rozhodne o tom, jaká stránka se má očekávat v dalším kroku. Jedná se tedy vlastně o implementaci stavového automatu založeného na vstupní hodnotě a předchozím stavu:
+
+(defn next-operation
+  [oper status]
+  (cond-table
+    :|                   (= oper :login)   (= oper :logout)  (= oper :index-page)
+    :|   (= status 200)  :index-page       :logout-page      :index-page
+    :|   (= status 401)  :not-authorized   :invalid-state    :invalid-state
+    :|   (= status 404)  :not-found        :not-found        :not-found))
+
+; Opět se podívejme, jak tato funkce pracuje:
+(doseq [operation [:login :logout :index-page]]
+  (doseq [status [200 401 404]]
+    (println operation status (next-operation operation status))))
+
+; S výsledkem:
+;; :login 200 :index-page
+;; :login 401 :not-authorized
+;; :login 404 :not-found
+;; :logout 200 :logout-page
+;; :logout 401 :invalid-state
+;; :logout 404 :not-found
+;; :index-page 200 :index-page
+;; :index-page 401 :invalid-state
+;; :index-page 404 :not-found
+
+; Poznámka: tabulku je pochopitelně možné libovolným způsobem rozšiřovat, ovšem stále se musíme držet její 2D struktury.
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Expanze makra cond-table
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(macroexpand-1
+  '(cond-table
+     :|                 (even? x)   (odd? x)
+     :|      (zero? x)  :a           :b        
+     :|  (not-zero? x)  :c           :d))
+
+;; (cond
+;;  (and (zero? x) (even? x))     :a
+;;  (and (zero? x) (odd? x))      :b
+;;  (and (not-zero? x) (even? x)) :c
+;;  (and (not-zero? x) (odd? x))  :d)
+
+(macroexpand-1
+  '(cond-table
+     :|                  (= oper :login)   (= oper :logout)  (= oper :index-page)
+     :|   (= status 200) :index-page       :logout-page      :index-page
+     :|   (= status 401) :not-authorized   :invalid-state    :invalid-state
+     :|   (= status 404) :not-found        :not-found        :not-found))
+
+;
+;; (cond
+;;  (and (= status 200) (= oper :login))       :index-page
+;;  (and (= status 200) (= oper :logout))      :logout-page
+;;  (and (= status 200) (= oper :index-page))  :index-page
+;;  (and (= status 401) (= oper :login))       :not-authorized
+;;  (and (= status 401) (= oper :logout))      :invalid-state
+;;  (and (= status 401) (= oper :index-page))  :invalid-state
+;;  (and (= status 404) (= oper :login))       :not-found
+;;  (and (= status 404) (= oper :logout))      :not-found
+;;  (and (= status 404) (= oper :index-page))  :not-found)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(macroexpand-all
+  '(cond-table
+     :|                 (even? x)   (odd? x)
+     :|      (zero? x)  :a           :b        
+     :|  (not-zero? x)  :c           :d))
+
+(macroexpand-all
+  '(cond-table
+     :|                  (= oper :login)   (= oper :logout)  (= oper :index-page)
+     :|   (= status 200) :index-page       :logout-page      :index-page
+     :|   (= status 401) :not-authorized   :invalid-state    :invalid-state
+     :|   (= status 404) :not-found        :not-found        :not-found))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Přílohy
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Na závěr se ještě zmiňme o speciálních formách programovacího jazyka Clojure.
 ; V tomto článku jsme se setkali se čtyřmi speciálními formami (jsou uvedeny na
@@ -1815,6 +2087,16 @@ No matching clause: 3
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Příloha: zdrojové kódy výše popsaných a použitých maker
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(source if-not)
+;; (defmacro if-not
+;;   "Evaluates test. If logical false, evaluates and returns then expr, 
+;;   otherwise else expr, if supplied, else nil."
+;;   {:added "1.0"}
+;;   ([test then] `(if-not ~test ~then nil))
+;;   ([test then else]
+;;    `(if (not ~test) ~then ~else)))
+;; 
 
 (source if-let)
 ;; (defmacro if-let
