@@ -1197,8 +1197,272 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 
 
 
-;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Vyhodnocování všech větví makrem cond->
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Na rozdíl od makra cond, které při splnění podmínky již další podmínky netestuje, je tomu u makra cond-> jinak, protože se postupně prochází všechny podmínky. To může vést k chybám, zejména tehdy, pokud se použije větev :else (symbol :else se vždy vyhodnotí na pravdu). Pokud tedy předchozí příklad nepatrně upravíme:
+(defn machina-2
+  [x]
+  (cond-> x 
+    (odd? x)  inc
+    (even? x) (/ 2)
+    :else     dec))
+
+; Získáme odlišné výsledky, což si ostatně můžeme velmi snadno ukázat:
+(doseq [x (range 0 11)]
+  (println x (machina x) (machina-2 x)))
+
+; Tabulka vypsaná předchozí smyčkou:
+; 0 -1 -1
+; 1 2 1
+; 2 1 0
+; 3 4 3
+; 4 2 1
+; 5 6 5
+; 6 3 2
+; 7 8 7
+; 8 4 3
+; 9 10 9
+; 10 5 4
+
+; Ještě lépe je toto chování patrné v případě, že se v jednotlivých větvích nachází funkce s vedlejším efektem, zde konkrétně funkce println:
+(defn machina-3
+  [x]
+  (cond-> x 
+    (odd? x)  (println "odd")
+    (even? x) (println "even")
+    :else     (println "zero")))
+
+; Zkusme si tuto funkci vyvolat postupně s hodnotami od 0 do 10:
+(doseq [x (range 0 11)]
+  (println x)
+  (machina-3 x)
+  (println))
+
+; Z výsledků je patrné, že se vždy vyhodnotí i poslední větev:
+;; 0
+;; 0 even
+;; nil zero
+;; 
+;; 1
+;; 1 odd
+;; nil zero
+;; 
+;; 2
+;; 2 even
+;; nil zero
+;; 
+;; 3
+;; 3 odd
+;; nil zero
+;; 
+;; 4
+;; 4 even
+;; nil zero
+;; 
+;; 5
+;; 5 odd
+;; nil zero
+;; 
+;; 6
+;; 6 even
+;; nil zero
+;; 
+;; 7
+;; 7 odd
+;; nil zero
+;; 
+;; 8
+;; 8 even
+;; nil zero
+;; 
+;; 9
+;; 9 odd
+;; nil zero
+;; 
+;; 10
+;; 10 even
+;; nil zero
+
+; Poznámka: funkce println v tomto případě ve skutečnosti vypíše i hodnotu parametru x, který je do println dosazen makrem cond->.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Expanze makra cond->
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Otestovat si můžeme i expanzi makra cond->. Pro výpis expandovaného makra opět použijeme známou funkci macroexpand:
+(macroexpand
+  '(cond-> x 
+     (odd? x)  inc
+     (even? x) (/ 2)
+     (zero? x) inc))
+
+; Výsledkem by měl být tento kód (pomocná proměnná může mít ovšem odlišné jméno):
+;; (let* [G__10086 x
+;;        G__10086 (if (odd? x)  (clojure.core/-> G__10086 inc) G__10086)
+;;        G__10086 (if (even? x) (clojure.core/-> G__10086 (/ 2)) G__10086)]
+;;   (if (zero? x) (clojure.core/-> G__10086 inc) G__10086))
+
+; Poznámka: povšimněte si, že se skutečně postupně vyhodnocují všechny větve a současně se interně používá threading makro ->.
+
+; Příklad expanze ne plně funkčního kódu s větví else:
+(macroexpand
+  '(cond-> x 
+     (odd? x)  inc
+     (even? x) (/ 2)
+     :else     inc))
+;; (let* [G__10117 x
+;;        G__10117 (if (odd? x) (clojure.core/-> G__10117 inc) G__10117)
+;;        G__10117 (if (even? x) (clojure.core/-> G__10117 (/ 2)) G__10117)]
+;;   (if :else (clojure.core/-> G__10117 inc) G__10117))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Makro cond->>
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Druhé makro určené pro implementaci rozvětvení na základě zadaných podmínek se jmenuje cond->>:
+(doc cond->>)
+;; -------------------------
+;; clojure.core/cond->>
+;; ([expr & clauses])
+;; Macro
+;;   Takes an expression and a set of test/form pairs. Threads expr (via ->>)
+;;   through each form for which the corresponding test expression
+;;   is true.  Note that, unlike cond branching, cond->> threading does not short circuit
+;;   after the first true test expression.
+
+; Opět se jedná o variantu makra cond, tentokrát ovšem zkombinovanou s alternativní formou threading makra ->>:
+(doc ->>)
+;; -------------------------
+;; clojure.core/->>
+;; ([x & forms])
+;; Macro
+;;   Threads the expr through the forms. Inserts x as the
+;;   last item in the first form, making a list of it if it is not a
+;;   list already. If there are more forms, inserts the first form as the
+;;   last item in second form, etc.
+
+; Na rozdíl od výše popsaného makra cond-> se liší dosazování parametru do jednotlivých větví - parametr je dosazen na poslední místo výrazu (což je typicky volání nějaké funkce) a nikoli na místo první. Pokud tedy například použijeme tuto funkci:
+
+(defn machina-3
+  [x]
+  (cond->> x 
+    (odd? x)  inc
+    (even? x) (/ 2)))
+
+; bude se ve druhé větvi vyhodnocovat funkce (/ 2 x) a nikoli (/ x 2).
+
+; Výše uvedenou funkci si otestujeme na vstupních hodnotách od nuly do deseti:
+(doseq [x (range 1 11)]
+  (println x (machina-3 x)))
+
+; S výsledkem:
+;; 1 2
+;; 2 1
+;; 3 4
+;; 4 1/2
+;; 5 6
+;; 6 1/3
+;; 7 8
+;; 8 1/4
+;; 9 10
+;; 10 1/5
+
+; Nepatrně složitější příklad, který se snaží převést parametr na celé číslo:
+
+(defn ->int
+  [x]
+  (cond->> x 
+    (string? x)   Integer.
+    (float?  x)   int
+    (rational? x) int
+    (integer? x)  identity))
+
+; Chování této funkce si můžeme snadno otestovat:
+(println (->int 3.14))
+; 3
+(println (->int 10/3))
+; 3
+(println (->int 42))
+; 42
+(println (->int "1000"))
+; 1000
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Expanze makra cond->>
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Makra ze jmenného prostoru clojure.core.logic
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use 'clojure.core.logic)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Od "jednorozměrných" rozhodovacích konstrukcí ke konstrukcím dvourozměrným
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro cond-table
+  [& items]
+  (let [rows (validate-cond-table items)
+        rights (first rows)  ;; get right-hand conditions
+        rights (if (and (symbol? (first rights))
+                        (every? (partial = \_) (name (first rights))))
+                 (next rights)
+                 rights)
+        op-omitted? (= (count (second rows))
+                       (inc (count rights)))
+        [op rights] (if op-omitted?
+                      ['and rights]
+                      [(first rights) (next rights)])]
+    (cons 'cond
+          (mapcat
+           (fn [[left-condition & exprs :as row]]
+             (mapcat
+              (fn [right-condition expr]
+                ;; `cond` test/expr pair:
+                (list (list op left-condition right-condition) expr))
+              rights exprs))
+           (next rows)))))
+
+(defn validate-cond-table
+  "Validate the arguments passed to the `cond-table` macro and return
+  the data of the table rows."
+  [items]
+  (let [rs (into []
+                 (comp (partition-by (partial = :|))
+                       (partition-all 2))
+                 items)
+        _ (when-not (every? #(= '(:|) (first %)) rs)
+            (throw (IllegalArgumentException. "Each row in cond-table must begin with the keyword :|")))
+        rows (map second rs) ;; remove :| syntax
+        header-count (count (first rows))
+        next-row-counts (into #{} (map count) (next rows))
+        next-rows-same-count? (= 1 (count next-row-counts))
+        ;; First row with blank first cell, for default `and` behavior
+        default-header-validates? (= (inc header-count) (first next-row-counts))
+        ;; First row with custom op in first cell
+        op-header-validates? (= header-count (first next-row-counts))
+        ;; All rows after the first must be same length and first row is either
+        ;; the same length (because a custom op was supplied) or has one item
+        ;; fewer (default of `and` is being leveraged).
+        _ (when-not (and next-rows-same-count?
+                         (or default-header-validates?
+                             op-header-validates?))
+            (throw (IllegalArgumentException. "Every row after the first in cond-table must start with a predicate and include an expression for each cell in the table.")))]
+    rows))
+
 
 ; Na závěr se ještě zmiňme o speciálních formách programovacího jazyka Clojure.
 ; V tomto článku jsme se setkali se čtyřmi speciálními formami (jsou uvedeny na
@@ -1467,12 +1731,56 @@ Toto na první pohled poněkud neobvyklé pojmenování nám naznačuje, že se 
 
 
 (source conde)
+;; (defmacro conde
+;;   "Logical disjunction of the clauses. The first goal in
+;;   a clause is considered the head of that clause. Interleaves the
+;;   execution of the clauses."
+;;   [& clauses]
+;;   (let [a (gensym "a")]
+;;     `(fn [~a]
+;;        (-inc
+;;         (mplus* ~@(bind-conde-clauses a clauses))))))
+
 
 (source condu)
+;; (defmacro condu
+;;   "Committed choice. Once the head (first goal) of a clause
+;;   has succeeded, remaining goals of the clause will only
+;;   be run once. Non-relational."
+;;   [& clauses]
+;;   (let [a (gensym "a")]
+;;     `(fn [~a]
+;;        (ifu* ~@(map (cond-clauses a) clauses)))))
+
 
 (source conda)
+;; (defmacro conda
+;;   "Soft cut. Once the head of a clause has succeeded
+;;   all other clauses will be ignored. Non-relational."
+;;   [& clauses]
+;;   (let [a (gensym "a")]
+;;     `(fn [~a]
+;;        (ifa* ~@(map (cond-clauses a) clauses)))))
+
 
 (source cond->)
+;; (defmacro cond->
+;;   "Takes an expression and a set of test/form pairs. Threads expr (via ->)
+;;   through each form for which the corresponding test
+;;   expression is true. Note that, unlike cond branching, cond-> threading does
+;;   not short circuit after the first true test expression."
+;;   {:added "1.5"}
+;;   [expr & clauses]
+;;   (assert (even? (count clauses)))
+;;   (let [g (gensym)
+;;         steps (map (fn [[test step]] `(if ~test (-> ~g ~step) ~g))
+;;                    (partition 2 clauses))]
+;;     `(let [~g ~expr
+;;            ~@(interleave (repeat g) (butlast steps))]
+;;        ~(if (empty? steps)
+;;           g
+;;           (last steps)))))
+
 
 (source cond->>)
 ;; (defmacro cond->>
