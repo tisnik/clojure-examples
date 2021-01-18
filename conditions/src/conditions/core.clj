@@ -1,30 +1,36 @@
 ; Ukázky použití rozhodovacích konstrukcí v programovacím jazyku Clojure
 
 ; Popsány a použity budou následující rozhodovací konstrukce
-; -------------------------------------------------------------------------------------------------------------
-; | #  | Konstrukce  | Typ                 | Stručný popis                                                    |
-; -------------------------------------------------------------------------------------------------------------
-; |  1 | if          | speciální forma     | základní rozhodovací konstrukce, základ pro další makra          |
-; |  2 | if+do       | dvě speciální formy | použito ve chvíli, kdy je nutné do jedné větve či obou větví zapsat více výrazů |
-; |  3 | if-let      | makro               | 
-; |  4 | if-some     | makro               |
-; |  5 | and         | makro               |
-; |  6 | or          | makro               |
-; |  7 | when        |
-; |  8 | when-not    |
-; |  9 | when-let    |
-; | 10 | when-some   |
-; | 11 | when-first  |
-; | 12 | cond        |
-; | 13 | cond + else |
+; ----------------------------------------------------------------------------------------------------------------------------------------
+; | #  | Konstrukce  | Typ                 | Stručný popis                                                                               |
+; ----------------------------------------------------------------------------------------------------------------------------------------
+; |  1 | if          | speciální forma     | základní rozhodovací konstrukce, základ pro další makra                                     |
+; |  2 | if+do       | dvě speciální formy | použito ve chvíli, kdy je nutné do jedné větve či obou větví zapsat více výrazů             |
+; |  3 | if-let      | makro               | kombinace speciálních forem "if" a "let"                                                    |
+; |  4 | if-some     | makro               | kombinace speciálních forem "if" a "let" (test na hodnotu "nil")                            |
+; ----------------------------------------------------------------------------------------------------------------------------------------
+; |  5 | and         | makro               | postupné vyhodnocování předaných výrazů až do chvíle, kdy se vrátí nil či false             |
+; |  6 | or          | makro               | postupné vyhodnocování předaných výrazů až do chvíle, kdy se vrátí true                     |
+; ----------------------------------------------------------------------------------------------------------------------------------------
+; |  7 | when        | makro               | vhodná náhrada za "if" s jedinou větví s více výrazy                                        |
+; |  8 | when-not    | makro               | vhodná náhrada za "if-not" s jedinou větví s více výrazy                                    |
+; |  9 | when-let    | makro               | kombinace speciálních forem "when" a "let"                                                  |
+; | 10 | when-some   | makro               | kombinace speciálních forem "when" (test na hodnotu "nil") a "let"                          |
+; | 11 | when-first  |                                                                                                                   
+; ----------------------------------------------------------------------------------------------------------------------------------------
+; | 12 | cond        | makro               | postupné testování podmínek, pokud je podmínka splněna, vrátí se hodnota příslušného výrazu |
+; | 13 | cond + else | makro               | typické použití makra cond s větví :else nebo :default                                      |
 ; | 14 | condp       |
 ; | 15 | conde       |
 ; | 16 | condu       |
 ; | 17 | conda       |
+; ----------------------------------------------------------------------------------------------------------------------------
 ; | 18 | cond->      |
 ; | 19 | cond->>     |
+; ----------------------------------------------------------------------------------------------------------------------------
 ; | 20 | case        |
 ; | 21 | case + else |
+; ----------------------------------------------------------------------------------------------------------------------------
 ; | 22 | cond-table  |makro | nová nestandardní konstrukce se zdrojovým kódem zmíněným na konci druhého článku
 ; -------------------------------------------------------------------------------------------------------------
 
@@ -644,7 +650,7 @@
 ; LISPu:
 
 (doc cond)
--------------------------
+;; -------------------------
 ;; clojure.core/cond
 ;; ([& clauses])
 ;; Macro
@@ -653,6 +659,13 @@
 ;;   the value of the corresponding expr and doesn't evaluate any of the
 ;;  other tests or exprs. (cond) returns nil.
 ;; nil
+
+; Tomuto makru se předávají dvojice test+výraz. Pokud je test splněn, je
+; vrácena hodnota příslušného výrazu. Poslední test bývá zapsán formou symbolu,
+; který se vždy vyhodnotí na pravdu – což je vlastně jakýkoli symbol rozdílný
+; od "false" nebo "nil". Typicky se používá symbol ":else", ovšem někteří
+; vývojáři dávají přednost ":default" (takže se jedná o céčkaře nebo Javisty
+; :-).
 
 ; Poznámka: v programovacím jazyce Clojure je "cond" realizováno formou makra,
 ; zatímco v některých implementacích Scheme se jedná o speciální formu. Jediný
@@ -669,12 +682,14 @@
 (doseq [value [-100 -1 0 1 100]]
         (println (sgn-3 value)))
 
+; Poslední test se ovšem většinou zapisuje symbolem ":else":
 (defn sgn-4
   [x]
   (cond (pos? x)  1
         (neg? x) -1
         :else     0))
 
+; nebo ":default":
 (defn sgn-5
   [x]
   (cond (pos? x)  1
@@ -685,20 +700,53 @@
 (doseq [value [-100 -1 0 1 100]]
         (println (sgn-4 value)))
 
+; Přepis funkce pro výpočet největšího společného dělitele:
+(defn gcd-2
+  [x y]
+  (cond
+    (= x y) x
+    (> x y) (gcd-2 (- x y) y)
+    :else   (gcd-2 x (- y x))))
+
+; S otestováním:
+(println (gcd-2 64 24))
+(println (gcd-2 123456 6543216))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Plná expanze makra cond
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Pokusme se nyní výraz s makrem cond expandovat, abychom zjistili, jaký kód
+; bude vlastně přeložen do bajtkódu:
+
 (macroexpand
   '(cond (pos? x)  1
          (neg? x) -1
          :else     0))
+
+; Výsledkem expanze bude:
 ;; (if (pos? x) 1 (clojure.core/cond (neg? x) -1 :else 0))
 
+; To je zajímavé, protože toto makro volá samo sebe, což funkce "macroexpand"
+; nedokáže korektně zpracovat. Namísto této funkce bychom tedy potřebovali
+; plnou (rekurzivní) expanzi. Ta je zajištěna s využitím "macroexpand-all" z
+; balíčku "clojure.walk", který je nejdříve nutné načíst:
 (use 'clojure.walk)
 
+; Nyní se již můžeme pokusit o plnou expanzi makra cond použitého ve výrazu:
 (macroexpand-all
   '(cond (pos? x)  1
          (neg? x) -1
          :else     0))
+
+; Nyní již výsledek bude skutečně obsahovat pouze základní funkce, speciální
+; formy a atomické hodnoty (tedy takové symboly, které budou překládány do
+; bajtkódu):
 ;; (if (pos? x) 1 (if (neg? x) -1 (if :else 0 nil)))
 
+; Pro zajímavost si vyzkoušejme expanzi složitějšího výrazu, který převádí
+; bodové ohodnocení na známky:
 (let [grade 85]
   (cond
     (>= grade 90) "A"
@@ -707,6 +755,7 @@
     (>= grade 60) "D"
     :else         "F"))
 
+; Expanzi (prozatím neúplnou) makra "cond" zobrazíme následovně:
 (macroexpand
   '(cond
     (>= grade 90) "A"
@@ -715,6 +764,7 @@
     (>= grade 60) "D"
     :else "F"))
 
+; Samotný expandovaný kód vypadá takto:
 ;; (if
 ;;  (>= grade 90)
 ;;  "A"
@@ -728,6 +778,7 @@
 ;;   :else
 ;;   "F"))
 
+; Úplná expanze:
 (macroexpand-all
   '(cond
     (>= grade 90) "A"
@@ -735,13 +786,176 @@
     (>= grade 70) "C"
     (>= grade 60) "D"
     :else "F"))
-;; (if
-;;  (>= grade 90)
-;;  "A"
-;;  (if
-;;   (>= grade 80)
-;;   "B"
-;;   (if (>= grade 70) "C" (if (>= grade 60) "D" (if :else "F" nil)))))
+
+; Z expandovaného makra je patrné, že se jedná o sérii vnořených speciálních forem "if":
+;; (if (>= grade 90)
+;;     "A"
+;;     (if (>= grade 80)
+;;         "B"
+;;         (if (>= grade 70)
+;;             "C"
+;;             (if (>= grade 55)
+;;                 "D"
+;;                 (if :else
+;;                     "F"
+;;                     nil)))))
+
+; Poznámka: výše uvedený kód byl ručně upraven tak, aby byl dobře čitelný.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Sekvence testů prováděná makrem condp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Výše popsané makro "cond" je velmi univerzální, protože každý test (kterých
+; může být libovolné množství) je realizován plnohodnotným predikátem, tj.
+; funkcí, na základě jejíž (pravdivostní) návratové hodnoty se rozhoduje,
+; jestli se má provést příslušná větev či zda se má vyzkoušet další test. Ve
+; výsledku je toto makro expandováno na vnořené speciální formy "if", což jsme
+; ostatně mohli vidět v předchozí kapitole. Ovšem mnohdy takovou univerzálnost
+; nepotřebujeme a naopak vyžadujeme, aby se výsledek nějakého výrazu porovnal
+; se sekvencí známých hodnot. Taková konstrukce, která je v C, C++ či Javě
+; realizována přes "switch", se v programovacím jazyku Clojure zapisuje s
+; využitím makra nazvaného "condp":
+
+(doc condp)
+; -------------------------
+; clojure.core/condp
+; ([pred expr & clauses])
+; Macro
+;   Takes a binary predicate, an expression, and a set of clauses.
+;   Each clause can take the form of either:
+; 
+;   test-expr result-expr
+; 
+;   test-expr :>> result-fn
+; 
+;   Note :>> is an ordinary keyword.
+; 
+;   For each clause, (pred test-expr expr) is evaluated. If it returns
+;   logical true, the clause is a match. If a binary clause matches, the
+;   result-expr is returned, if a ternary clause matches, its result-fn,
+;   which must be a unary function, is called with the result of the
+;   predicate as its argument, the result of that call being the return
+;   value of condp. A single default expression can follow the clauses,
+;   and its value will be returned if no clause matches. If no default
+;   expression is provided and no clause matches, an
+;   IllegalArgumentException is thrown.
+
+; Z popisu je zřejmé, že je nutné uvést část výrazu, do kterého se postupně
+; doplňují hodnoty z testů v jednotlivých větvích - skutečně se tedy jedná o
+; obdobu "case" z C či Javy. Poslední větev pochopitelně žádnou hodnotu pro
+; otestování neobsahuje.
+
+; Podívejme se nyní na základní způsob použití tohoto makra. Na základě
+; předaného řetězce se rozhodneme, jaká hodnota se vrátí (jedná se o primitivní
+; transformaci, která by se v reálném programu realizovala přes mapu):
+
+(let [value (read-line)]
+  (condp = value
+      "one"   1
+      "two"   2
+      "three" 3
+      "four"  4
+      "five"  5
+              "unknown value"))
+
+; Pokud je na standardní vstup (do terminálu) zapsán jeden z pěti známých
+; řetězců, provede se jeho převod na číselnou hodnotu. V opačném případě se
+; vrátí řetězec "unknown value".
+
+; V případě, že poslední výraz neuvedeme, dojde při zápisu neznámého vstupu k
+; pádu (resp. přesněji řečeno k vyhození výjimky):
+(let [value (read-line)]
+  (condp = value
+      "one"   1
+      "two"   2
+      "three" 3
+      "four"  4
+      "five"  5))
+
+; Execution error (IllegalArgumentException) at user/eval6625 (REPL:2).
+; No matching clause: foobarbaz
+
+; Samozřejmě namísto konstant ve větvích můžeme použít nějaký složitější výraz:
+
+(let [value (read-line)]
+  (condp = value
+      "one"   (+ 0 1)
+      "two"   (+ 1 1)
+      "three" 3
+      "four"  (* 2 2)
+      "five"  5
+              (str "unexpected value, \"" value \")))
+
+; Výrazy mohou být použity i v testovaných hodnotách:
+
+(let [value (read-line)]
+  (condp = value
+      "one"           (+ 0 1)
+      (str "t" "wo")  (+ 1 1)
+      (str "t" "ree") 3
+      "four"          (* 2 2)
+      "five"          5
+                      (str "unexpected value, \"" value \")))
+
+; Poznámka: pro jednoduchost jsou všechny příklady z této kapitoly dosti umělé;
+; typicky "školní".
+
+; Poněkud praktičtější příklad, který porovná dvě hodnoty:
+(defn sgn-6
+  [x]
+  (condp apply [x 0]
+    = 0
+    < -1
+    > 1))
+
+; Otestování:
+(println (sgn-6 -100))
+(println (sgn-6 -1))
+(println (sgn-6 0))
+(println (sgn-6 100))
+
+; Tato funkce de facto postupně provádí testy:
+(apply = [x 0])
+(apply < [x 0])
+(apply > [x 0])
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Aplikace funkce namísto vyhodnocení výrazu ve větvi
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Existuje ještě jedna forma volání makra "condp". Tato forma má v každé větvi
+; tři výrazy: podmínku, nějaký "keyword" (začínající na dvojtečku) a funkci. V
+; případě, že je podmínka splněna, zavolá se příslušná funkce na výsledek
+; predikátu (testu). Tato funkce tedy musí být unární, protože neexistuje
+; možnost zápisu druhého či dalšího parametru funkce (samozřejmě však můžete v
+; případě potřeby použít uzávěr):
+
+(condp some [1 2 3 4]
+  #{0 6 7} :>> inc
+  #{4 5 9} :>> dec
+  #{1 2 3} :>> #(+ % 3))
+
+; Při expanzi se postupně provádí tyto testy až do doby, kdy nějaký test
+; (predikát) vrátí hodnotu rozdílnou od "false" či "nil":
+(some #{0 6 7} [1 2 3 4])
+(some #{4 5 9} [1 2 3 4])
+(some #{1 2 3} [1 2 3 4])
+
+; Ve skutečnosti je již druhý test úspěšný:
+(some #{4 5 9} [1 2 3 4])
+; 4
+
+; Následně je vrácena hodnota výrazu:
+(dec 4)
+; 3
+
+; Poznámka: tento opět dosti umělý demonstrační příklad byl získán z adresy
+; https://clojuredocs.org/clojure.core/condp. Popravdě jsem prozatím tuto
+; variantu v produkčním kódu nikdy nepoužil.
+
 
 
 (defn gcd-2
