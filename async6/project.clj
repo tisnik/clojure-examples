@@ -18,6 +18,8 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/core.async "0.2.374"]]
   :plugins [[lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
+            ;[lein-test-out "0.3.1"]
             [lein-project-edn "0.3.0"]
             [lein-marginalia "0.9.1"]]
   :project-edn {:output-file "doc/details.clj"}
