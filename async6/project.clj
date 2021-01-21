@@ -20,6 +20,7 @@
   :plugins [[lein-codox "0.10.7"]
             [test2junit "1.1.0"]
             ;[lein-test-out "0.3.1"]
+            [lein-cloverage "1.0.7-SNAPSHOT"]
             [lein-project-edn "0.3.0"]
             [lein-marginalia "0.9.1"]]
   :project-edn {:output-file "doc/details.clj"}
