@@ -1,5 +1,5 @@
 ;
-;  (C) Copyright 2015, 2020  Pavel Tisnovsky
+;  (C) Copyright 2015, 2020, 2021  Pavel Tisnovsky
 ;
 ;  All rights reserved. This program and the accompanying materials
 ;  are made available under the terms of the Eclipse Public License v1.0
@@ -15,7 +15,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
                  [net.mikera/clisk "0.10.0"]]
   :main ^:skip-aot clisktest2.core
   :target-path "target/%s"
