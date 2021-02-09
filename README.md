@@ -7,20 +7,35 @@ for the "Wisp" transpiler.
 
 ## Groups of examples
 
-## List of examples
+### `core.async` - A Clojure library providing facilities for async programming and communication
 
-* async1
-* async2
-* async3
-* async4
-* async5
-* async6
-* async7
-* async8
-* async9
-* async10
-* async11
-* async12
+* [async1](async1)
+* [async2](async2)
+* [async3](async3)
+* [async4](async4)
+* [async5](async5)
+* [async6](async6)
+* [async7](async7)
+* [async8](async8)
+* [async9](async9)
+* [async10](async10)
+* [async11](async11)
+* [async12](async12)
+
+## List of examples in alphabetical order
+
+* [async1](async1)
+* [async2](async2)
+* [async3](async3)
+* [async4](async4)
+* [async5](async5)
+* [async6](async6)
+* [async7](async7)
+* [async8](async8)
+* [async9](async9)
+* [async10](async10)
+* [async11](async11)
+* [async12](async12)
 * babashka
 * clisktest1
 * clisktest2
