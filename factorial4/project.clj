@@ -15,7 +15,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.9.0"]]
+  :dependencies [[org.clojure/clojure "1.10.1"]]
   :main ^:skip-aot factorial4.core
   :target-path "target/%s"
   :plugins [[test2junit "1.1.0"]]
