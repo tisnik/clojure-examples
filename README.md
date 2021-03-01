@@ -3,7 +3,9 @@ Simple and not so simple examples written in Clojure
 
 Please note that scripts in the "Wisp" directory might not
 be 100% compatible with Clojure because they are prepared
-for the "Wisp" transpiler.
+for the "Wisp" transpiler. Also "Babashka" directorry
+contains scripts to be run by Babashka interpreter, not
+by the classic Clojure one.
 
 ## Groups of examples
 
