@@ -19,6 +19,8 @@
                  [org.clojure/core.async "0.2.374"]]
   :plugins [[lein-codox "0.10.7"]
             [test2junit "1.1.0"]
+            ;[lein-test-out "0.3.1"]
+            [lein-cloverage "1.0.7-SNAPSHOT"]
             [lein-marginalia "0.9.1"]]
   :main ^:skip-aot async12.core
   :target-path "target/%s"
