@@ -20,6 +20,7 @@
                  [ring/ring-jetty-adapter "1.3.2"]
                  [hiccup "1.0.4"]]
   :plugins [[lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
             ]
   :main ^:skip-aot webapp13.core
   :target-path "target/%s"
