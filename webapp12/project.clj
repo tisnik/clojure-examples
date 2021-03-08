@@ -20,6 +20,8 @@
                  [ring/ring-jetty-adapter "1.3.2"]]
   :plugins [[lein-codox "0.10.7"]
             [test2junit "1.1.0"]
+            ;[lein-test-out "0.3.1"]
+            [lein-cloverage "1.0.7-SNAPSHOT"]
             ]
   :main ^:skip-aot webapp12.core
   :target-path "target/%s"
