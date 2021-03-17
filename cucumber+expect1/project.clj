@@ -20,6 +20,7 @@
   :plugins [[com.siili/lein-cucumber "1.0.7"]
             [lein-expectations "0.0.8"]
             [lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
             ]
   :cucumber-feature-paths ["test/features/"]
   :main ^:skip-aot cucumber+expect1.core
