@@ -20,6 +20,7 @@
                  [expectations "2.0.9"]]
   :plugins [[com.siili/lein-cucumber "1.0.7"]
             [lein-expectations "0.0.8"]
+            [lein-codox "0.10.7"]
             ]
   :cucumber-feature-paths ["features/"]
   :target-path "target/%s"
