@@ -23,7 +23,9 @@
             [lein-cloverage "1.0.7-SNAPSHOT"]
             [lein-kibit "0.1.8"]
             [lein-clean-m2 "0.1.2"]
+            [lein-project-edn "0.3.0"]
             [lein-marginalia "0.9.1"]]
+  :project-edn {:output-file "doc/details.clj"}
   :main ^:skip-aot async12.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
