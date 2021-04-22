@@ -1,3 +1,5 @@
+#!/usr/bin/env bb
+
 ;
 ;  (C) Copyright 2020  Pavel Tisnovsky
 ;
@@ -9,8 +11,6 @@
 ;  Contributors:
 ;      Pavel Tisnovsky
 ;
-
-#!/usr/bin/env bb
 
 (require '[clojure.pprint :as pprint])
 (require '[clojure.tools.cli :refer [parse-opts]])
