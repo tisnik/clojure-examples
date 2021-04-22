@@ -1,3 +1,5 @@
+#!/usr/bin/env bb
+
 ;
 ;  (C) Copyright 2020  Pavel Tisnovsky
 ;
