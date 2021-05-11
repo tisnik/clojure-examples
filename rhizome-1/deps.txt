@@ -1,0 +1,3 @@
+$ lein deps
+Retrieving rhizome/rhizome/0.2.9/rhizome-0.2.9.pom from clojars
+Retrieving rhizome/rhizome/0.2.9/rhizome-0.2.9.jar from clojars
