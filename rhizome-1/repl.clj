@@ -130,3 +130,17 @@
                                            "Pascal" "Wirth"
                                            "Modula" "Wirth"})
 
+
+; kombinace predchozich prikladu
+(viz/save-graph (keys g) g :filename "g15.png"
+                           :node->descriptor make-node-descriptor-2
+                           :edge->descriptor make-edge-descriptor-2
+                           :node->cluster {"ANSI C" "C"
+                                           "C89" "C"
+                                           "C99" "C"
+                                           "C with classes" "C++"
+                                           "C++" "C++"
+                                           "Pascal" "Wirth"
+                                           "Modula" "Wirth"}
+                           :directed? nil)
+
