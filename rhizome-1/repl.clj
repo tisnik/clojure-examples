@@ -93,3 +93,40 @@
 (viz/save-graph (keys g) g :filename "g10.png"
                            :node->descriptor make-node-descriptor-2
                            :edge->descriptor make-edge-descriptor-2)
+
+; clustering
+(viz/save-graph (keys g) g :filename "g11.png"
+                           :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster identity)
+
+; clustering
+(viz/save-graph (keys g) g :filename "g12.png"
+                           :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster identity
+                           :cluster->parent {"ANSI C" "C89"
+                                             "C89" "C99"
+                                             })
+
+; clustering
+(viz/save-graph (keys g) g :filename "g13.png"
+                           :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster identity
+                           :cluster->parent {"ANSI C" "C89"
+                                             "C with classes" "C++"
+                                             "Pascal" "Modula"})
+
+; clustering
+(viz/save-graph (keys g) g :filename "g14.png"
+                           :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster {"ANSI C" "C"
+                                           "C89" "C"
+                                           "C99" "C"
+                                           "C with classes" "C++"
+                                           "C++" "C++"
+                                           "Pascal" "Wirth"
+                                           "Modula" "Wirth"})
+
