@@ -144,3 +144,130 @@
                                            "Modula" "Wirth"}
                            :directed? nil)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; view-graph
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require '[rhizome.viz :as viz])
+(require '[rhizome.dot :as dot])
+
+(def g {"Algol" ["K&R C"],
+        "K&R C" ["ANSI C"]})
+
+(viz/view-graph (keys g) g)
+
+(viz/view-graph (keys g) g :node->descriptor (fn [n] {:label n}))
+
+; graf, kde i uzly existuji ve forme zaznamu
+(def g {"Algol" ["K&R C"],
+        "K&R C" ["ANSI C"],
+        "ANSI C" nil})
+
+; ulozeni grafu i s popisky uzlu
+(viz/view-graph (keys g) g :node->descriptor (fn [n] {:label n}))
+
+; slozitejsi graf, kde maji uzly vice potomku
+(def g {"Algol" ["K&R C", "Pascal", "Modula"],
+        "K&R C" ["ANSI C", "C with classes"],
+        "C with classes" ["C++"],
+        "ANSI C" ["C89"],
+        "C89" ["C99"],
+        "Pascal" nil,
+        "Modula" nil,
+        "C++" nil,
+        "C99" nil})
+
+; ulozeni grafu i s popisky uzlu
+(viz/view-graph (keys g) g :node->descriptor (fn [n] {:label n}))
+
+; zmena stylu vykresleni grafu - bez orientovanych hran
+(viz/view-graph (keys g) g :node->descriptor (fn [n] {:label n})
+                           :directed? nil)
+
+; zmena stylu vykresleni grafu - horizontalne orientovany
+(viz/view-graph (keys g) g :node->descriptor (fn [n] {:label n})
+                           :vertical? false)
+
+; ulozeni grafu i s popisky uzlu a hran
+(viz/view-graph (keys g) g :node->descriptor (fn [n] {:label n})
+                           :edge->descriptor (fn [n1 n2] {:label (str n1 "&rarr;" n2)}))
+
+(defn make-node-descriptor
+  [n]
+  {:label n})
+
+(defn make-edge-descriptor
+  [n1 n2]
+  {:label (str n1 "&rarr;" n2)})
+
+; dtto ovsem bez pouziti anonymnich funkci
+; ulozeni grafu i s popisky uzlu a hran
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor)
+
+(defn make-node-descriptor-2
+  [n]
+  {:label n
+   :color (if (= n "ANSI C") "darkgreen" "#000000")})
+
+; styly vykresleni uzlu
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor-2
+                           :edge->descriptor make-edge-descriptor)
+
+(defn make-edge-descriptor-2
+  [n1 n2]
+  (let [color (cond (= n1 "ANSI C") "red"
+                    (= n2 "ANSI C") "blue"
+                    :else "black")]
+    {:label (str n1 "&rarr;" n2)
+     :color color}))
+
+; styly vykresleni hran
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor-2
+                           :edge->descriptor make-edge-descriptor-2)
+
+; clustering
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster identity)
+
+; clustering
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster identity
+                           :cluster->parent {"ANSI C" "C89"
+                                             "C89" "C99"
+                                             })
+
+; clustering
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster identity
+                           :cluster->parent {"ANSI C" "C89"
+                                             "C with classes" "C++"
+                                             "Pascal" "Modula"})
+
+; clustering
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor
+                           :node->cluster {"ANSI C" "C"
+                                           "C89" "C"
+                                           "C99" "C"
+                                           "C with classes" "C++"
+                                           "C++" "C++"
+                                           "Pascal" "Wirth"
+                                           "Modula" "Wirth"})
+
+
+; kombinace predchozich prikladu
+(viz/view-graph (keys g) g :node->descriptor make-node-descriptor-2
+                           :edge->descriptor make-edge-descriptor-2
+                           :node->cluster {"ANSI C" "C"
+                                           "C89" "C"
+                                           "C99" "C"
+                                           "C with classes" "C++"
+                                           "C++" "C++"
+                                           "Pascal" "Wirth"
+                                           "Modula" "Wirth"}
+                           :directed? nil)
+
