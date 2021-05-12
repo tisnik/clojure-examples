@@ -30,12 +30,44 @@
 ; slozitejsi graf, kde maji uzly vice potomku
 (def g {"Algol" ["K&R C", "Pascal", "Modula"],
         "K&R C" ["ANSI C", "C with classes"],
-        "ANSI C" nil,
+        "C with classes" ["C++"],
+        "ANSI C" ["C89"],
+        "C89" ["C99"],
         "Pascal" nil,
         "Modula" nil,
-        "C with classes" nil})
+        "C++" nil,
+        "C99" nil})
 
 ; ulozeni grafu i s popisky uzlu
 (viz/save-graph (keys g) g :filename "g4.png"
                            :node->descriptor (fn [n] {:label n}))
+
+; zmena stylu vykresleni grafu - bez orientovanych hran
+(viz/save-graph (keys g) g :filename "g5.png"
+                           :node->descriptor (fn [n] {:label n})
+                           :directed? nil)
+
+; zmena stylu vykresleni grafu - horizontalne orientovany
+(viz/save-graph (keys g) g :filename "g6.png"
+                           :node->descriptor (fn [n] {:label n})
+                           :vertical? false)
+
+; ulozeni grafu i s popisky uzlu a hran
+(viz/save-graph (keys g) g :filename "g7.png"
+                           :node->descriptor (fn [n] {:label n})
+                           :edge->descriptor (fn [n1 n2] {:label (str n1 "&rarr;" n2)}))
+
+(defn make-node-descriptor
+  [n]
+  {:label n})
+
+(defn make-edge-descriptor
+  [n1 n2]
+  {:label (str n1 "&rarr;" n2)})
+
+; dtto ovsem bez pouziti anonymnich funkci
+; ulozeni grafu i s popisky uzlu a hran
+(viz/save-graph (keys g) g :filename "g8.png"
+                           :node->descriptor make-node-descriptor
+                           :edge->descriptor make-edge-descriptor)
 
