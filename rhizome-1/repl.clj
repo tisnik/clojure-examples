@@ -260,14 +260,17 @@
 
 
 ; kombinace predchozich prikladu
-(viz/view-graph (keys g) g :node->descriptor make-node-descriptor-2
-                           :edge->descriptor make-edge-descriptor-2
-                           :node->cluster {"ANSI C" "C"
-                                           "C89" "C"
-                                           "C99" "C"
-                                           "C with classes" "C++"
-                                           "C++" "C++"
-                                           "Pascal" "Wirth"
-                                           "Modula" "Wirth"}
-                           :directed? nil)
+(spit "test.dot"
+      (dot/graph->dot (keys g) g :node->descriptor make-node-descriptor-2
+                      :edge->descriptor make-edge-descriptor-2
+                      :node->cluster {"ANSI C" "C"
+                                      "C89" "C"
+                                      "C99" "C"
+                                      "C with classes" "C++"
+                                      "C++" "C++"
+                                      "Pascal" "Wirth"
+                                      "Modula" "Wirth"}
+                      :directed? nil))
+
+(slurp "test.dot")
 
