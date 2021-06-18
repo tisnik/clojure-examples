@@ -1,0 +1,44 @@
+graph {
+graph[dpi=100, rankdir=TP]
+node[fontname="Monospace"]
+edge[fontname="Monospace"]
+
+node5972[label="K&R C", color="#000000"]
+node5973[label="Algol", color="#000000"]
+subgraph cluster5974 {
+graph[dpi=100, fontname="Monospace", rankdir=TP]
+node[fontname="Monospace"]
+edge[fontname="Monospace"]
+
+node5975[label="C89", color="#000000"]
+node5976[label="ANSI C", color="darkgreen"]
+node5977[label="C99", color="#000000"]
+}
+
+subgraph cluster5978 {
+graph[dpi=100, fontname="Monospace", rankdir=TP]
+node[fontname="Monospace"]
+edge[fontname="Monospace"]
+
+node5979[label="Pascal", color="#000000"]
+node5980[label="Modula", color="#000000"]
+}
+
+subgraph cluster5981 {
+graph[dpi=100, fontname="Monospace", rankdir=TP]
+node[fontname="Monospace"]
+edge[fontname="Monospace"]
+
+node5982[label="C++", color="#000000"]
+node5983[label="C with classes", color="#000000"]
+}
+
+node5972 -- node5976[label="K&R C&rarr;ANSI C", color="blue"]
+node5972 -- node5983[label="K&R C&rarr;C with classes", color="black"]
+node5975 -- node5977[label="C89&rarr;C99", color="black"]
+node5973 -- node5972[label="Algol&rarr;K&R C", color="black"]
+node5973 -- node5979[label="Algol&rarr;Pascal", color="black"]
+node5973 -- node5980[label="Algol&rarr;Modula", color="black"]
+node5976 -- node5975[label="ANSI C&rarr;C89", color="red"]
+node5983 -- node5982[label="C with classes&rarr;C++", color="black"]
+}
