@@ -1,0 +1,101 @@
+2020-12-27 15:37:51.906 | WARN  | main | stream-pipe-5.core | Deleting topic input
+2020-12-27 15:37:52.008 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:52.112 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:52.315 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:52.518 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:53.024 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:53.730 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:54.738 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:55.645 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:56.551 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:57.458 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:37:58.365 | WARN  | kafka-admin-client-thread | adminclient-1 | org.apache.kafka.clients.NetworkClient | [AdminClient clientId=adminclient-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2020-12-27 15:38:54.407 | WARN  | main | stream-pipe-5.core | Deleting topic input
+2020-12-27 15:38:54.699 | WARN  | main | stream-pipe-5.core | Deleting topic output1
+2020-12-27 15:38:54.727 | WARN  | main | stream-pipe-5.core | Deleting topic output2
+2020-12-27 15:38:54.768 | WARN  | main | stream-pipe-5.core | Deleting topic output3
+2020-12-27 15:38:54.798 | WARN  | main | stream-pipe-5.core | Creating topic input
+2020-12-27 15:38:54.848 | WARN  | main | stream-pipe-5.core | Creating topic output1
+2020-12-27 15:38:54.885 | WARN  | main | stream-pipe-5.core | Creating topic output2
+2020-12-27 15:38:54.930 | WARN  | main | stream-pipe-5.core | Creating topic output3
+2020-12-27 15:38:54.969 | WARN  | main | stream-pipe-5.core | Starting application
+2020-12-27 15:38:55.087 | WARN  | main | org.apache.kafka.clients.consumer.ConsumerConfig | The configuration 'admin.retries' was supplied but isn't a known config.
+2020-12-27 15:38:55.087 | WARN  | main | org.apache.kafka.clients.consumer.ConsumerConfig | The configuration 'admin.retry.backoff.ms' was supplied but isn't a known config.
+2020-12-27 15:38:55.093 | WARN  | main | stream-pipe-5.core | Starting pipe
+2020-12-27 15:38:55.097 | WARN  | main | stream-pipe-5.core | Pipe is up
+2020-12-27 15:38:55.099 | WARN  | main | stream-pipe-5.core | App created: #object[org.apache.kafka.streams.KafkaStreams 0x185bf6e0 org.apache.kafka.streams.KafkaStreams@185bf6e0]
+2020-12-27 15:39:10.083 | WARN  | pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a-StreamThread-1 | stream-pipe-5.core | Received message with key:    p1  and value: {:x 1, :y 2}
+2020-12-27 15:39:10.205 | WARN  | pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p1  and value: {:result 3}
+2020-12-27 15:39:10.333 | WARN  | pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p1  and value: {:result 3, :timestamp Sun Dec 27 15:39:10 CET 2020}
+2020-12-27 15:39:10.457 | WARN  | pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p1  and value: {:result 3, :timestamp Sun Dec 27 15:39:10 CET 2020, :counter #object[clojure.lang.Atom 0x64d1969a {:status :ready, :val 1}]}
+2020-12-27 15:39:10.461 | ERROR | pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a-StreamThread-1 | org.apache.kafka.streams.processor.internals.StreamThread | stream-thread [pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a-StreamThread-1] Encountered the following error during processing:
+java.lang.Exception: Don't know how to write JSON of class clojure.lang.Atom
+	at clojure.data.json$write_generic.invokeStatic(json.clj:385)
+	at clojure.data.json$write_generic.invoke(json.clj:382)
+	at clojure.data.json$eval5726$fn__5727$G__5717__5734.invoke(json.clj:286)
+	at clojure.data.json$write_object.invokeStatic(json.clj:335)
+	at clojure.data.json$write_object.invoke(json.clj:319)
+	at clojure.data.json$eval5726$fn__5727$G__5717__5734.invoke(json.clj:286)
+	at clojure.data.json$write.invokeStatic(json.clj:475)
+	at clojure.data.json$write.doInvoke(json.clj:424)
+	at clojure.lang.RestFn.invoke(RestFn.java:425)
+	at clojure.lang.AFn.applyToHelper(AFn.java:156)
+	at clojure.lang.RestFn.applyTo(RestFn.java:132)
+	at clojure.core$apply.invokeStatic(core.clj:669)
+	at clojure.core$apply.invoke(core.clj:660)
+	at clojure.data.json$write_str.invokeStatic(json.clj:482)
+	at clojure.data.json$write_str.doInvoke(json.clj:477)
+	at clojure.lang.RestFn.invoke(RestFn.java:410)
+	at jackdaw.serdes.json$serializer$fn__5863.invoke(json.clj:26)
+	at jackdaw.serdes.fn_impl.FnSerializer.serialize(fn_impl.clj:25)
+	at org.apache.kafka.common.serialization.Serializer.serialize(Serializer.java:62)
+	at org.apache.kafka.streams.processor.internals.RecordCollectorImpl.send(RecordCollectorImpl.java:163)
+	at org.apache.kafka.streams.processor.internals.RecordCollectorImpl.send(RecordCollectorImpl.java:103)
+	at org.apache.kafka.streams.processor.internals.SinkNode.process(SinkNode.java:89)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:201)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:180)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:133)
+	at org.apache.kafka.streams.kstream.internals.KStreamPeek$KStreamPeekProcessor.process(KStreamPeek.java:44)
+	at org.apache.kafka.streams.processor.internals.ProcessorNode.process(ProcessorNode.java:117)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:201)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:180)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:133)
+	at org.apache.kafka.streams.kstream.internals.KStreamMap$KStreamMapProcessor.process(KStreamMap.java:42)
+	at org.apache.kafka.streams.processor.internals.ProcessorNode.process(ProcessorNode.java:117)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:201)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:180)
+	at org.apache.kafka.streams.processor.internals.ProcessorContextImpl.forward(ProcessorContextImpl.java:133)
+	at org.apache.kafka.streams.processor.internals.SourceNode.process(SourceNode.java:87)
+	at org.apache.kafka.streams.processor.internals.StreamTask.process(StreamTask.java:363)
+	at org.apache.kafka.streams.processor.internals.AssignedStreamsTasks.process(AssignedStreamsTasks.java:199)
+	at org.apache.kafka.streams.processor.internals.TaskManager.process(TaskManager.java:425)
+	at org.apache.kafka.streams.processor.internals.StreamThread.runOnce(StreamThread.java:912)
+	at org.apache.kafka.streams.processor.internals.StreamThread.runLoop(StreamThread.java:819)
+	at org.apache.kafka.streams.processor.internals.StreamThread.run(StreamThread.java:788)
+2020-12-27 15:39:10.496 | ERROR | pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a-StreamThread-1 | org.apache.kafka.streams.KafkaStreams | stream-client [pipe-0d01ed9c-c2cb-49f0-a22a-d51529d85b4a] All stream threads have died. The instance will be in error state and should be closed.
+2020-12-27 15:39:39.101 | WARN  | main | stream-pipe-5.core | Deleting topic input
+2020-12-27 15:39:39.322 | WARN  | main | stream-pipe-5.core | Deleting topic output1
+2020-12-27 15:39:39.345 | WARN  | main | stream-pipe-5.core | Deleting topic output2
+2020-12-27 15:39:39.367 | WARN  | main | stream-pipe-5.core | Deleting topic output3
+2020-12-27 15:39:39.392 | WARN  | main | stream-pipe-5.core | Creating topic input
+2020-12-27 15:39:39.433 | WARN  | main | stream-pipe-5.core | Creating topic output1
+2020-12-27 15:39:39.464 | WARN  | main | stream-pipe-5.core | Creating topic output2
+2020-12-27 15:39:39.514 | WARN  | main | stream-pipe-5.core | Creating topic output3
+2020-12-27 15:39:39.542 | WARN  | main | stream-pipe-5.core | Starting application
+2020-12-27 15:39:39.644 | WARN  | main | org.apache.kafka.clients.consumer.ConsumerConfig | The configuration 'admin.retries' was supplied but isn't a known config.
+2020-12-27 15:39:39.644 | WARN  | main | org.apache.kafka.clients.consumer.ConsumerConfig | The configuration 'admin.retry.backoff.ms' was supplied but isn't a known config.
+2020-12-27 15:39:39.649 | WARN  | main | stream-pipe-5.core | Starting pipe
+2020-12-27 15:39:39.651 | WARN  | main | stream-pipe-5.core | Pipe is up
+2020-12-27 15:39:39.653 | WARN  | main | stream-pipe-5.core | App created: #object[org.apache.kafka.streams.KafkaStreams 0x185bf6e0 org.apache.kafka.streams.KafkaStreams@185bf6e0]
+2020-12-27 15:39:44.513 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Received message with key:    p1  and value: {:x 1, :y 2}
+2020-12-27 15:39:44.639 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p1  and value: {:result 3}
+2020-12-27 15:39:44.757 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p1  and value: {:result 3, :timestamp Sun Dec 27 15:39:44 CET 2020}
+2020-12-27 15:39:44.872 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p1  and value: {:result 3, :timestamp Sun Dec 27 15:39:44 CET 2020, :counter 1}
+2020-12-27 15:40:01.612 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Received message with key:    p2  and value: {:x 0, :y 9}
+2020-12-27 15:40:01.720 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p2  and value: {:result 9}
+2020-12-27 15:40:01.828 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p2  and value: {:result 9, :timestamp Sun Dec 27 15:40:01 CET 2020}
+2020-12-27 15:40:01.937 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p2  and value: {:result 9, :timestamp Sun Dec 27 15:40:01 CET 2020, :counter 2}
+2020-12-27 15:40:15.268 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Received message with key:    p3  and value: {:y 1, :x 2}
+2020-12-27 15:40:15.371 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p3  and value: {:result 3}
+2020-12-27 15:40:15.475 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p3  and value: {:result 3, :timestamp Sun Dec 27 15:40:15 CET 2020}
+2020-12-27 15:40:15.578 | WARN  | pipe-59b1dc4a-3765-4852-9b26-77f96500c106-StreamThread-1 | stream-pipe-5.core | Transformed message with key: p3  and value: {:result 3, :timestamp Sun Dec 27 15:40:15 CET 2020, :counter 3}
