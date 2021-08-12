@@ -30,6 +30,7 @@
             [lein-clean-m2 "0.1.2"]
             [lein-project-edn "0.3.0"]
             [lein-marginalia "0.9.1"]]
+  :project-edn {:output-file "doc/details.clj"}
   :main ^:skip-aot stream-pipe-2.core
   :target-path "target/%s"
   :resource-paths ["resources/"]
