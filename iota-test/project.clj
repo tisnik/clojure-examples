@@ -18,6 +18,8 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [juxt/iota "0.2.3"]
                  [ring/ring-core "1.3.2"]]
+  :plugins [[lein-codox "0.10.7"]
+            ]
   :main ^:skip-aot iota-test.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
