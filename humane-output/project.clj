@@ -17,6 +17,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [ring/ring-core "1.3.2"]]
+  :plugins [[lein-codox "0.10.7"]
+            ]
   :main ^:skip-aot humane-output.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
