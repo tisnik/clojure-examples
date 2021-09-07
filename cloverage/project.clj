@@ -16,7 +16,9 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]]
+  :plugins [[lein-codox "0.10.7"]
+            [lein-cloverage "1.0.2"]
+            ]
   :main ^:skip-aot cloverage.core
   :target-path "target/%s"
-  :plugins [[lein-cloverage "1.0.2"]]
   :profiles {:uberjar {:aot :all}})
