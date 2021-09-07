@@ -16,7 +16,8 @@
     :license {:name "Eclipse Public License"
               :url "http://www.eclipse.org/legal/epl-v10.html"}
     :dependencies [[org.clojure/clojure "1.10.1"]]
-    :plugins [[com.siili/lein-cucumber "1.0.7"]]
+    :plugins [[codox "0.8.11"]
+              [com.siili/lein-cucumber "1.0.7"]]
     :cucumber-feature-paths ["test/features/"]
     :main ^:skip-aot cucumber-demo.core
     :target-path "target/%s"
