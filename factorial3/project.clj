@@ -17,8 +17,9 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [expectations "2.0.9"]]
+  :plugins [[lein-codox "0.10.7"]
+            [lein-expectations "0.0.8"]
+            [lein-cloverage "1.0.2"]]
   :main ^:skip-aot factorial2.core
   :target-path "target/%s"
-  :plugins [[lein-expectations "0.0.8"]
-            [lein-cloverage "1.0.2"]]
   :profiles {:uberjar {:aot :all}})
