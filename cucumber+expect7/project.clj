@@ -17,10 +17,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [expectations "2.0.9"]]
-  :plugins [[com.siili/lein-cucumber "1.0.7"]
-            [lein-expectations "0.0.8"]
-            [lein-codox "0.10.7"]
+  :plugins [[lein-codox "0.10.7"]
             [test2junit "1.1.0"]
+            [com.siili/lein-cucumber "1.0.7"]
+            [lein-expectations "0.0.8"]
             ]
   :cucumber-feature-paths ["features/"]
   :main ^:skip-aot cucumber+expect7.core
