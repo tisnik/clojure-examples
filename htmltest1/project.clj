@@ -17,6 +17,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [hiccup "1.0.4"]]
+  :plugins [[lein-codox "0.10.7"]
+            ]
   :main ^:skip-aot htmltest1.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
