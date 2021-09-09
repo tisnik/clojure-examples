@@ -17,6 +17,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [expectations "2.0.9"]]
+  :plugins [[lein-codox "0.10.7"]
+            ]
   :main ^:skip-aot expectations-demo.core
   :target-path "target/%s"
   :plugins [[lein-expectations "0.0.8"]]
