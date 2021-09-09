@@ -18,6 +18,8 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [clj-jgit "0.8.0"]
                  [clj-rm-rf "1.0.0-SNAPSHOT"]]
+  :plugins [[lein-codox "0.10.7"]
+            ]
   :main ^:skip-aot git-test15.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
