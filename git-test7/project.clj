@@ -19,6 +19,7 @@
                  [clj-jgit "0.8.0"]
                  [clj-rm-rf "1.0.0-SNAPSHOT"]]
   :plugins [[lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
             ]
   :main ^:skip-aot git-test7.core
   :target-path "target/%s"
