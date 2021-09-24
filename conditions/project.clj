@@ -17,6 +17,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]]
   :plugins [[codox "0.8.11"]
+            [test2junit "1.1.0"]
             ]
   :main ^:skip-aot conditions.core
   :target-path "target/%s"
