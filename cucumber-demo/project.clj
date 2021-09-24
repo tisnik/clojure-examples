@@ -17,6 +17,7 @@
               :url "http://www.eclipse.org/legal/epl-v10.html"}
     :dependencies [[org.clojure/clojure "1.10.1"]]
     :plugins [[codox "0.8.11"]
+              [test2junit "1.1.0"]
               [com.siili/lein-cucumber "1.0.7"]]
     :cucumber-feature-paths ["test/features/"]
     :main ^:skip-aot cucumber-demo.core
