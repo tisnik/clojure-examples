@@ -19,6 +19,7 @@
                  [juxt/iota "0.2.3"]
                  [ring/ring-core "1.3.2"]]
   :plugins [[lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
             ]
   :main ^:skip-aot iota-test.core
   :target-path "target/%s"
