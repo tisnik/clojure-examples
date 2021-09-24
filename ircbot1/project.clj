@@ -18,6 +18,7 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [irclj "0.5.0-alpha4"]]
   :plugins [[lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
             ]
   :main ^:skip-aot ircbot1.core
   :target-path "target/%s"
