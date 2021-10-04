@@ -17,6 +17,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]]
   :plugins [[lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
             ]
   :main ^:skip-aot spec-demo3.core
   :target-path "target/%s"
