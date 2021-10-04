@@ -18,6 +18,7 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [seesaw "1.4.5"]]
   :plugins [[lein-codox "0.10.7"]
+            [test2junit "1.1.0"]
             ]
   :main ^:skip-aot seesaw8.core
   :target-path "target/%s"
