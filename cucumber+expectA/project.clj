@@ -20,6 +20,8 @@
                  [expectations "2.0.9"]]
   :plugins [[lein-codox "0.10.7"]
             [test2junit "1.1.0"]
+            ;[lein-test-out "0.3.1"]
+            [lein-cloverage "1.0.7-SNAPSHOT"]
             [com.siili/lein-cucumber "1.0.7"]
             [lein-expectations "0.0.8"]
             ]
