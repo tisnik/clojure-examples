@@ -20,6 +20,8 @@
                  [org.xerial/sqlite-jdbc "3.7.2"]]
   :plugins [[lein-codox "0.10.7"]
             [test2junit "1.1.0"]
+            ;[lein-test-out "0.3.1"]
+            [lein-cloverage "1.0.7-SNAPSHOT"]
             ]
   :main ^:skip-aot sqltest3.core
   :target-path "target/%s"
