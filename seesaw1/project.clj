@@ -19,6 +19,8 @@
                  [seesaw "1.4.5"]]
   :plugins [[lein-codox "0.10.7"]
             [test2junit "1.1.0"]
+            ;[lein-test-out "0.3.1"]
+            [lein-cloverage "1.0.7-SNAPSHOT"]
             ]
   :main ^:skip-aot seesaw1.core
   :target-path "target/%s"
