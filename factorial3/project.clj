@@ -21,6 +21,7 @@
             [test2junit "1.1.0"]
             ;[lein-test-out "0.3.1"]
             [lein-cloverage "1.0.7-SNAPSHOT"]
+            [lein-kibit "0.1.8"]
             [lein-expectations "0.0.8"]
             [lein-cloverage "1.0.2"]]
   :main ^:skip-aot factorial2.core
