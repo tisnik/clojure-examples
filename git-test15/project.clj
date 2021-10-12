@@ -22,6 +22,7 @@
             [test2junit "1.1.0"]
             ;[lein-test-out "0.3.1"]
             [lein-cloverage "1.0.7-SNAPSHOT"]
+            [lein-kibit "0.1.8"]
             ]
   :main ^:skip-aot git-test15.core
   :target-path "target/%s"
