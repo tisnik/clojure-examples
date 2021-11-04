@@ -23,6 +23,7 @@
             ;[lein-test-out "0.3.1"]
             [lein-cloverage "1.0.7-SNAPSHOT"]
             [lein-kibit "0.1.8"]
+            [lein-clean-m2 "0.1.2"]
             [com.siili/lein-cucumber "1.0.7"]
             [lein-expectations "0.0.8"]
             ]
