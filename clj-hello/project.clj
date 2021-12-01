@@ -22,5 +22,6 @@
             [lein-cloverage "1.0.7-SNAPSHOT"]
             [lein-kibit "0.1.8"]
             [lein-clean-m2 "0.1.2"]
+            [lein-project-edn "0.3.0"]
             ]
 )
