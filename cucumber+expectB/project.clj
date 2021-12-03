@@ -25,6 +25,7 @@
             [lein-kibit "0.1.8"]
             [lein-clean-m2 "0.1.2"]
             [lein-project-edn "0.3.0"]
+            [lein-marginalia "0.9.1"]]
             [com.siili/lein-cucumber "1.0.7"]
             [lein-expectations "0.0.8"]
             ]
