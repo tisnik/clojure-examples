@@ -24,7 +24,6 @@
             [lein-kibit "0.1.8"]
             [lein-clean-m2 "0.1.2"]
             [lein-marginalia "0.9.1"]]
-            ]
   :main ^:skip-aot vector1.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
