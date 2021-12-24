@@ -23,9 +23,8 @@
             [lein-kibit "0.1.8"]
             [lein-clean-m2 "0.1.2"]
             [lein-project-edn "0.3.0"]
-            [lein-marginalia "0.9.1"]]
-            [lein-nodisassemble "0.1.3"]
-            ]
+            [lein-marginalia "0.9.1"]
+            [lein-nodisassemble "0.1.3"]]
   :main ^:skip-aot dis.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all
