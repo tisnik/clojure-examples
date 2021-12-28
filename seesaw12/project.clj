@@ -25,7 +25,6 @@
             [lein-clean-m2 "0.1.2"]
             [lein-project-edn "0.3.0"]
             [lein-marginalia "0.9.1"]]
-            ]
   :main ^:skip-aot seesaw12.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
