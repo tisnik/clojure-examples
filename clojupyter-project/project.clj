@@ -24,8 +24,8 @@
             [lein-kibit "0.1.8"]
             [lein-clean-m2 "0.1.2"]
             [lein-project-edn "0.3.0"]
-            [lein-marginalia "0.9.1"]]
+            [lein-marginalia "0.9.1"]
+            [lein-jupyter "0.1.16"]]
   :main ^:skip-aot xyz.core
   :target-path "target/%s"
-  :plugins [[lein-jupyter "0.1.16"]]
   :profiles {:uberjar {:aot :all}})
