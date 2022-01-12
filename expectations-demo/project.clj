@@ -24,8 +24,8 @@
             [lein-kibit "0.1.8"]
             [lein-clean-m2 "0.1.2"]
             [lein-project-edn "0.3.0"]
+            [lein-expectations "0.0.8"]
             [lein-marginalia "0.9.1"]]
   :main ^:skip-aot expectations-demo.core
   :target-path "target/%s"
-  :plugins [[lein-expectations "0.0.8"]]
   :profiles {:uberjar {:aot :all}})
