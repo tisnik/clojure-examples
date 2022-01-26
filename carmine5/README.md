@@ -1,4 +1,4 @@
-# carmine1
+# carmine5
 
 FIXME: description
 
@@ -10,7 +10,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar carmine1-0.1.0-standalone.jar [args]
+    $ java -jar carmine5-0.1.0-standalone.jar [args]
 
 ## Options
 
